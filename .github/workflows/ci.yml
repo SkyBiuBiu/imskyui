@@ -23,11 +23,12 @@ jobs:
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
+      - name: 生产构建
+        run: pnpm build
+
+      # routeTree.gen.ts 由构建生成（已 gitignore），类型检查需在构建之后
       - name: 类型检查
         run: pnpm typecheck
 
       - name: 单元测试
         run: pnpm test
-
-      - name: 生产构建
-        run: pnpm build
