@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Alert, Badge, Button, Checkbox, EmptyState, HttpStatusPage, Input, Select, Skeleton, Switch, Textarea } from './ui'
+import { Alert, Badge, Breadcrumb, Button, Checkbox, EmptyState, HttpStatusPage, Input, Pagination, Select, Skeleton, Steps, Switch, Table, Textarea } from './ui'
 import './scenarios.css'
 
 export const httpScenarios = [
@@ -93,7 +93,7 @@ export function MultiStepFormDemo() {
     setStep(value => value + 1)
   }
   return <form ref={formRef} className="skyui-scenario skyui-demo-form" onSubmit={next} noValidate>
-    <ol className="skyui-steps" aria-label="创建项目步骤">{['基本信息', '确认内容', '完成'].map((label, index) => <li key={label} className={step >= index + 1 ? 'is-current' : ''} aria-current={step === index + 1 ? 'step' : undefined}><span>{index + 1}</span>{label}</li>)}</ol>
+    <Steps items={['基本信息', '确认内容', '完成']} current={step} ariaLabel="创建项目步骤" />
     {step === 1 ? <><Input label="项目名称" placeholder="例如：留白工作室" value={name} onChange={event => setName(event.target.value)} invalid={error} error="先给项目起个名字。" required /><Select label="项目方向" value={direction} onChange={event => setDirection(event.target.value)}><option>个人网站</option><option>组件库</option><option>作品集</option></Select><Button type="submit">下一步 →</Button></> : step === 2 ? <><div className="skyui-review"><span>项目名称<strong>{name}</strong></span><span>项目方向<strong>{direction}</strong></span></div><div className="skyui-action-row"><Button variant="secondary" onClick={() => setStep(1)}>上一步</Button><Button type="submit">确认预览</Button></div></> : <><Alert title="项目预览已完成" variant="success">{name} · {direction}。没有创建真实项目。</Alert><Button variant="secondary" onClick={() => { setStep(1); setName('') }}>再试一次</Button></>}
     <small className="skyui-demo-note">多步骤校验 · 返回时保留输入</small>
   </form>
@@ -170,9 +170,10 @@ export function DataTableDemo() {
   const pages = Math.max(1, Math.ceil(projects.length / 3))
   return <div className="skyui-scenario skyui-demo-form">
     <Input label="筛选项目" placeholder="搜索名称、类型或状态" value={query} onChange={event => { setQuery(event.target.value); setPage(1) }} />
-    <div className="skyui-table-wrap"><table className="skyui-table"><caption>我的项目 · 全部为示例数据</caption><thead><tr><th scope="col">项目</th><th scope="col">状态</th><th scope="col" aria-sort={ascending ? 'ascending' : 'descending'}><button type="button" onClick={() => setAscending(value => !value)}>更新 {ascending ? '↑' : '↓'}</button></th></tr></thead><tbody>{projects.slice((page - 1) * 3, page * 3).map(project => <tr key={project.name}><td><strong>{project.name}</strong><small>{project.type}</small></td><td><Badge variant={project.status === '已发布' ? 'dark' : 'outline'}>{project.status}</Badge></td><td>{project.date}</td></tr>)}</tbody></table></div>
+    <Table caption="我的项目 · 全部为示例数据" rowKey={project => project.name} rows={projects.slice((page - 1) * 3, page * 3)} columns={[{ key: 'name', header: '项目', render: project => <span><strong>{project.name}</strong><small>{project.type}</small></span> }, { key: 'status', header: '状态', render: project => <Badge variant={project.status === '已发布' ? 'dark' : 'outline'}>{project.status}</Badge> }, { key: 'date', header: <button type="button" onClick={() => setAscending(value => !value)} aria-sort={ascending ? 'ascending' : 'descending'}>更新 {ascending ? '↑' : '↓'}</button> }]} />
     {projects.length === 0 && <EmptyState title="没有匹配的项目" description="换一个关键词，或清除筛选条件。" action={<Button variant="secondary" onClick={() => setQuery('')}>清除筛选</Button>} />}
-    <div className="skyui-pagination"><Button variant="secondary" disabled={page === 1} onClick={() => setPage(value => value - 1)} aria-label="上一页项目">←</Button><span aria-live="polite">{page} / {pages} · {projects.length} 项</span><Button variant="secondary" disabled={page === pages} onClick={() => setPage(value => value + 1)} aria-label="下一页项目">→</Button></div>
+    <Pagination ariaLabel="项目分页" page={page} pageCount={pages} onChange={setPage} />
+    <small className="skyui-demo-note">{projects.length} 项 · 第 {page} / {pages} 页</small>
   </div>
 }
 
@@ -181,9 +182,9 @@ export function NavigationDemo() {
   const [page, setPage] = useState(1)
   const levels = ['工作空间', '我的作品', '留白工作室']
   return <div className="skyui-scenario skyui-demo-form">
-    <nav className="skyui-breadcrumb" aria-label="示例面包屑"><ol>{levels.slice(0, level + 1).map((label, index) => <li key={label}>{index > 0 && <span aria-hidden="true">/</span>}<button type="button" aria-current={index === level ? 'page' : undefined} onClick={() => { setLevel(index); setPage(1) }}>{label}</button></li>)}</ol></nav>
+    <Breadcrumb ariaLabel="示例面包屑" items={levels.slice(0, level + 1).map((label, index) => ({ label, onClick: () => { setLevel(index); setPage(1) } }))} />
     <div className="skyui-navigation-preview"><span className="skyui-demo-note">当前位置</span><h4>{levels[level]}</h4><p>内容预览 · 第 {page} 页</p>{level < 2 && <Button variant="secondary" onClick={() => { setLevel(value => value + 1); setPage(1) }}>进入{levels[level + 1]} →</Button>}</div>
-    <div className="skyui-pagination" role="group" aria-label="示例分页">{[1, 2, 3, 4].map(value => <button type="button" key={value} aria-label={`第 ${value} 页`} aria-current={page === value ? 'page' : undefined} onClick={() => setPage(value)}>{String(value).padStart(2, '0')}</button>)}</div>
+    <Pagination ariaLabel="示例分页" page={page} pageCount={4} onChange={setPage} />
     <small className="skyui-demo-note">导航交互示例 · 不改变站点路由</small>
   </div>
 }

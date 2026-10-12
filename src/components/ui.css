@@ -74,4 +74,172 @@
 .skyui-http-4xx .skyui-http-art span:nth-child(3) { transform: rotate(45deg); }
 .skyui-http-5xx .skyui-http-art { background: repeating-linear-gradient(135deg, var(--skyui-ink) 0 1px, transparent 1px 7px); border-radius: 50%; }
 @keyframes skyui-pulse { 50% { opacity: .4; } }
-@media (prefers-reduced-motion: reduce) { .skyui-button, .skyui-switch span { transition: none; } .skyui-skeleton { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .skyui-button, .skyui-switch span, .skyui-tooltip::after, .skyui-progress span { transition: none; } .skyui-skeleton, .skyui-spinner { animation: none; } }
+
+/* ------------------------------------------------------------------ */
+/* v1.2.0 新增组件样式                                                  */
+/* ------------------------------------------------------------------ */
+
+/* Button 尺寸与加载态 */
+.skyui-button-sm { min-height: 29px; padding: 6px 10px; font-size: 11px; }
+.skyui-button-lg { min-height: 43px; padding: 12px 20px; font-size: 13px; }
+.skyui-button-loading { opacity: .75; pointer-events: none; }
+.skyui-spinner { width: 12px; height: 12px; border: 1.5px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: skyui-spin .7s linear infinite; }
+@keyframes skyui-spin { to { transform: rotate(360deg); } }
+
+/* Input 前后缀组合 */
+.skyui-input-bare { border: 0; }
+.skyui-input-bare:focus-visible { outline: none; }
+.skyui-input-group { display: flex; align-items: center; width: 100%; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); }
+.skyui-input-group .skyui-input { flex: 1; height: 36px; }
+.skyui-input-group:focus-within { outline: 2px solid var(--skyui-muted); outline-offset: 3px; }
+.skyui-input-group-invalid { border-style: dashed; border-color: var(--skyui-ink); }
+.skyui-input-affix { display: inline-flex; align-items: center; padding: 0 10px; color: var(--skyui-muted); font-size: 11px; white-space: nowrap; user-select: none; }
+
+/* Avatar 图片与状态点 */
+.skyui-avatar { position: relative; }
+.skyui-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.skyui-avatar-status { position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--skyui-paper); background: var(--skyui-muted); }
+.skyui-avatar-status-online { background: var(--skyui-ink); }
+.skyui-avatar-status-offline { background: transparent; border-color: var(--skyui-line); }
+.skyui-avatar-status-busy { background: repeating-linear-gradient(45deg, var(--skyui-ink) 0 1px, transparent 1px 3px); }
+
+/* Alert 可关闭 */
+.skyui-icon-close { display: grid; place-items: center; flex-shrink: 0; width: 22px; height: 22px; border: 0; border-radius: 4px; background: transparent; color: var(--skyui-muted); font-size: 15px; line-height: 1; cursor: pointer; }
+.skyui-icon-close:hover { color: var(--skyui-ink); background: var(--skyui-line); }
+.skyui-alert-close { margin-left: auto; }
+
+/* Skeleton 变体 */
+.skyui-skeleton-circle { width: 34px; height: 34px; border-radius: 50%; }
+.skyui-skeleton-rect { height: 56px; border-radius: var(--skyui-radius); }
+
+/* Tabs */
+.skyui-tabs { display: flex; flex-direction: column; gap: 14px; }
+.skyui-tabs-list { display: flex; gap: 4px; border-bottom: 1px solid var(--skyui-line); }
+.skyui-tabs-list button { padding: 8px 12px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--skyui-muted); font: inherit; font-size: 12px; cursor: pointer; }
+.skyui-tabs-list button:hover { color: var(--skyui-ink); }
+.skyui-tab-active, .skyui-tab-active:hover { color: var(--skyui-ink); border-bottom-color: var(--skyui-ink); }
+.skyui-tab-panel { color: var(--skyui-ink); font-size: 12px; }
+
+/* Accordion */
+.skyui-accordion { display: flex; flex-direction: column; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); overflow: hidden; }
+.skyui-accordion-item + .skyui-accordion-item { border-top: 1px solid var(--skyui-line); }
+.skyui-accordion-trigger { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; padding: 12px; border: 0; background: var(--skyui-paper); color: var(--skyui-ink); font: inherit; font-size: 12px; font-weight: 500; text-align: left; cursor: pointer; }
+.skyui-accordion-trigger:hover { background: var(--skyui-subtle); }
+.skyui-accordion-icon { flex-shrink: 0; color: var(--skyui-muted); font-size: 14px; transition: transform .2s; }
+.skyui-accordion-item[data-open="true"] .skyui-accordion-icon { transform: rotate(45deg); }
+.skyui-accordion-panel { padding: 0 12px 12px; background: var(--skyui-paper); color: var(--skyui-muted); font-size: 11px; line-height: 1.8; }
+
+/* Modal（原生 dialog） */
+.skyui-modal { width: min(420px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--skyui-line); border-radius: 12px; background: var(--skyui-paper); color: var(--skyui-ink); box-shadow: 0 24px 60px #20202026; }
+.skyui-modal::backdrop { background: #20202059; }
+.skyui-modal-body { display: flex; flex-direction: column; gap: 14px; padding: 20px; font-size: 12px; }
+.skyui-modal-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.skyui-modal-heading h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.skyui-modal-footer { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* Drawer */
+.skyui-drawer-overlay { position: fixed; inset: 0; z-index: 60; background: #20202059; }
+.skyui-drawer { position: absolute; top: 0; bottom: 0; display: flex; flex-direction: column; gap: 14px; width: min(320px, 86vw); padding: 20px; background: var(--skyui-paper); color: var(--skyui-ink); font-size: 12px; }
+.skyui-drawer-right { right: 0; border-left: 1px solid var(--skyui-line); }
+.skyui-drawer-left { left: 0; border-right: 1px solid var(--skyui-line); }
+.skyui-drawer-bottom { top: auto; left: 0; right: 0; bottom: 0; width: 100%; max-height: 70vh; border-top: 1px solid var(--skyui-line); }
+.skyui-drawer-content { flex: 1; overflow-y: auto; }
+
+/* Toast */
+.skyui-toasts { position: fixed; right: 16px; bottom: 16px; z-index: 70; display: flex; flex-direction: column; gap: 8px; width: min(320px, calc(100vw - 32px)); }
+.skyui-toast { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); color: var(--skyui-ink); font-size: 12px; box-shadow: 0 12px 32px #2020201f; }
+.skyui-toast-symbol { display: grid; place-items: center; flex-shrink: 0; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 10px; }
+.skyui-toast-success .skyui-toast-symbol { background: var(--skyui-ink); color: var(--skyui-paper); }
+.skyui-toast-message { flex: 1; min-width: 0; }
+
+/* Tooltip（纯 CSS，悬停 / 键盘聚焦显示） */
+.skyui-tooltip { position: relative; display: inline-flex; max-width: 100%; }
+.skyui-tooltip::after { content: attr(data-tip); position: absolute; left: 50%; z-index: 40; padding: 6px 9px; transform: translateX(-50%) translateY(4px); border: 1px solid var(--skyui-line); border-radius: 4px; background: var(--skyui-ink); color: var(--skyui-paper); font-size: 10px; line-height: 1.4; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; }
+.skyui-tooltip-top::after { bottom: calc(100% + 7px); }
+.skyui-tooltip-bottom::after { top: calc(100% + 7px); transform: translateX(-50%) translateY(-4px); }
+.skyui-tooltip:hover::after, .skyui-tooltip:focus-within::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Dropdown */
+.skyui-dropdown { position: relative; display: inline-block; }
+.skyui-dropdown-trigger { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); color: var(--skyui-ink); font: inherit; font-size: 12px; cursor: pointer; }
+.skyui-dropdown-trigger[aria-expanded="true"] { background: var(--skyui-subtle); }
+.skyui-menu { position: absolute; top: calc(100% + 6px); z-index: 50; display: flex; flex-direction: column; min-width: 150px; padding: 5px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); box-shadow: 0 16px 40px #20202024; }
+.skyui-menu-start { left: 0; }
+.skyui-menu-end { right: 0; }
+.skyui-menu button { padding: 8px 10px; border: 0; border-radius: 4px; background: transparent; color: var(--skyui-ink); font: inherit; font-size: 11px; text-align: left; cursor: pointer; }
+.skyui-menu button:hover:not(:disabled) { background: var(--skyui-subtle); }
+.skyui-menu button:disabled { color: var(--skyui-muted); cursor: not-allowed; }
+
+/* Progress / Slider */
+.skyui-progress { width: 100%; height: 6px; overflow: hidden; border-radius: 4px; background: var(--skyui-line); }
+.skyui-progress span { display: block; height: 100%; background: var(--skyui-ink); transition: width .2s; }
+.skyui-slider { width: 100%; accent-color: var(--skyui-ink); }
+
+/* AvatarGroup / Tag */
+.skyui-avatar-group { display: inline-flex; align-items: center; }
+.skyui-avatar-group .skyui-avatar { border: 2px solid var(--skyui-paper); }
+.skyui-avatar-group .skyui-avatar + .skyui-avatar { margin-left: -9px; }
+.skyui-avatar-more { font-family: inherit; font-style: normal; font-size: 10px; }
+.skyui-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--skyui-line); border-radius: 4px; background: var(--skyui-subtle); color: var(--skyui-ink); font-size: 11px; }
+.skyui-tag-close { font-size: 13px; }
+
+/* Breadcrumb（自 scenarios.css 上移） */
+.skyui-breadcrumb { display: block; margin: 0; }
+.skyui-breadcrumb ol { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.skyui-breadcrumb li { display: flex; align-items: center; gap: 7px; color: var(--skyui-muted); font-size: 10px; }
+.skyui-breadcrumb button, .skyui-breadcrumb a { padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; text-decoration: none; cursor: pointer; }
+.skyui-breadcrumb button:hover, .skyui-breadcrumb a:hover { color: var(--skyui-ink); }
+.skyui-breadcrumb [aria-current="page"] { color: var(--skyui-ink); }
+
+/* Pagination（自 scenarios.css 上移） */
+.skyui-pagination { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.skyui-pagination > span { color: var(--skyui-muted); font-size: 10px; }
+.skyui-pagination > button:not(.skyui-button) { min-width: 34px; min-height: 34px; padding: 8px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); color: var(--skyui-muted); font: inherit; cursor: pointer; }
+.skyui-pagination > button[aria-current="page"] { background: var(--skyui-ink); color: var(--skyui-paper); border-color: var(--skyui-ink); }
+
+/* Steps（自 scenarios.css 上移） */
+.skyui-steps { display: flex; gap: 8px; padding: 0; margin: 0 0 6px; list-style: none; }
+.skyui-steps li { display: flex; align-items: center; gap: 5px; color: var(--skyui-muted); font-size: 10px; }
+.skyui-steps span { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--skyui-line); border-radius: 50%; }
+.skyui-steps .is-current { color: var(--skyui-ink); }
+.skyui-steps .is-current span { background: var(--skyui-ink); color: var(--skyui-paper); border-color: var(--skyui-ink); }
+
+/* Table（自 scenarios.css 上移） */
+.skyui-table-wrap { overflow-x: auto; }
+.skyui-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+.skyui-table caption { text-align: left; font-size: 10px; color: var(--skyui-muted); padding-bottom: 12px; }
+.skyui-table th { font-size: 10px; color: var(--skyui-muted); font-weight: 500; }
+.skyui-table th button { padding: 0; border: 0; font: inherit; background: transparent; color: inherit; cursor: pointer; }
+.skyui-table td, .skyui-table th { padding: 11px 5px; border-bottom: 1px solid var(--skyui-line); }
+.skyui-table td { font-size: 10px; }
+.skyui-table td strong { display: block; font-size: 11px; font-weight: 500; }
+.skyui-table td small { display: block; font-size: 9px; color: var(--skyui-muted); margin-top: 5px; }
+.skyui-table .skyui-badge { font-size: 9px; padding: 4px 5px; }
+
+/* Divider */
+.skyui-divider { display: flex; align-items: center; gap: 10px; width: 100%; margin: 4px 0; color: var(--skyui-muted); font-size: 10px; }
+.skyui-divider::before, .skyui-divider::after { content: ''; flex: 1; height: 1px; background: var(--skyui-line); }
+.skyui-divider-vertical { display: inline-flex; flex-direction: column; align-self: stretch; width: auto; min-height: 18px; margin: 0 4px; }
+.skyui-divider-vertical::before, .skyui-divider-vertical::after { width: 1px; height: auto; }
+
+/* Statistic / Timeline / Descriptions / Container */
+.skyui-statistic { display: flex; flex-direction: column; gap: 6px; }
+.skyui-statistic-label { color: var(--skyui-muted); font-size: 11px; }
+.skyui-statistic-row { display: flex; align-items: baseline; gap: 8px; }
+.skyui-statistic-value { font-family: Georgia, serif; font-size: 26px; font-weight: 400; line-height: 1.1; }
+.skyui-timeline { position: relative; display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0 0 0 18px; list-style: none; }
+.skyui-timeline::before { content: ''; position: absolute; top: 4px; bottom: 4px; left: 3px; width: 1px; background: var(--skyui-line); }
+.skyui-timeline li { position: relative; display: flex; flex-direction: column; gap: 4px; }
+.skyui-timeline li::before { content: ''; position: absolute; top: 4px; left: -18px; width: 7px; height: 7px; border: 1px solid var(--skyui-ink); border-radius: 50%; background: var(--skyui-paper); }
+.skyui-timeline strong { font-size: 12px; font-weight: 500; }
+.skyui-timeline p { margin: 0; color: var(--skyui-muted); font-size: 11px; line-height: 1.7; }
+.skyui-timeline small { color: var(--skyui-muted); font-size: 10px; }
+.skyui-descriptions { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0; }
+.skyui-descriptions > div { display: flex; flex-direction: column; gap: 5px; padding: 10px 12px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-subtle); }
+.skyui-descriptions dt { color: var(--skyui-muted); font-size: 10px; }
+.skyui-descriptions dd { margin: 0; color: var(--skyui-ink); font-size: 12px; font-weight: 500; }
+.skyui-container { width: 100%; margin: 0 auto; padding: 0 16px; }
+
+/* 新增交互元素焦点态 */
+.skyui-tabs-list button:focus-visible, .skyui-accordion-trigger:focus-visible, .skyui-dropdown-trigger:focus-visible, .skyui-menu button:focus-visible, .skyui-icon-close:focus-visible, .skyui-breadcrumb button:focus-visible, .skyui-breadcrumb a:focus-visible, .skyui-pagination > button:focus-visible { outline: 2px solid var(--skyui-muted); outline-offset: 3px; }
