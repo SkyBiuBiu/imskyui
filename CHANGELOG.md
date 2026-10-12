@@ -3,6 +3,18 @@
 本项目的所有重要变更都记录在此文件中。
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [1.2.1] - 2026-10-12
+
+### Removed 移除
+
+- 移除 Netlify 部署耦合：删除 `netlify.toml`、`@netlify/vite-plugin-tanstack-start` 依赖及其 Vite 插件接入。
+- 构建产物为 `dist/client`（客户端）+ `dist/server`（SSR），部署平台中立 —— Vercel / Cloudflare / Netlify / 自建 Node 服务器均可接入。
+- 同步更新 README、AGENTS.md 与 `.gitignore` 中的 Netlify 相关描述。
+
+### 向后兼容
+
+组件本身（`ui.tsx` / `ui.css` / `scenarios.*`）无任何改动，v1.2.0 用法完全兼容。
+
 ## [1.2.0] - 2026-10-12
 
 本次迭代的主线：**画廊看到的东西，全部拿得走**。此前只存在于展示站里的 Tabs、Accordion、Dialog、Toast 等组件全部收编进 `ui.tsx` 下载包，并补齐浮层类标配与数据展示组件。

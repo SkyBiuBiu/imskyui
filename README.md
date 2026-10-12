@@ -254,7 +254,7 @@ import { ContactFormDemo, DataTableDemo, DataStatesDemo } from './components/sce
 
 ## 技术栈
 
-React 19 · TypeScript · TanStack Start / Router · Vite 7 · Tailwind CSS 4 · Lucide 图标 · Netlify
+React 19 · TypeScript · TanStack Start / Router · Vite 7 · Tailwind CSS 4 · Lucide 图标（仅展示站）
 
 页面主要使用自定义 CSS，几何视觉全部由 CSS 绘制，不依赖图片资源。对话框使用原生 `dialog.showModal()`，自带焦点限制、Escape 关闭与焦点还原。
 
@@ -283,7 +283,7 @@ pnpm dev
 
 提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。CI 在每次 push 与 PR 时运行类型检查、测试与构建。
 
-Netlify 部署配置位于 `netlify.toml`（构建命令 `vite build`，发布目录 `dist/client`）。
+`pnpm build` 产物输出到 `dist/client`（客户端）与 `dist/server`（SSR），不绑定任何部署平台 —— Vercel、Cloudflare、Netlify 或自建 Node 服务器均可接入。
 
 ---
 
