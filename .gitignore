@@ -1,0 +1,11 @@
+# Local Netlify folder
+.netlify
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Generated route tree
+src/routeTree.gen.ts
