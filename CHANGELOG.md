@@ -3,6 +3,63 @@
 本项目的所有重要变更都记录在此文件中。
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [1.3.0] - 2026-10-12
+
+本次迭代的主线：**从「控件集合」升级为「自洽的设计语言」**。新增排版、容器、命令面板、日期选择等 24 个导出（组件与工具 34 → 58），展示站画廊 46 → 61 张卡片，`⌘K` 从「聚焦搜索框」升级为真正的命令面板。
+
+### Added 新增
+
+**排版与容器（6）**
+
+- `Title`（h1~h4 四级标题）、`Text`（secondary / muted / strong / code / mark / underline / strikethrough）、`Paragraph`、`Kbd` —— 设计语言的核心载体，此前全靠裸 HTML 标签。
+- `Card` 卡片容器（标题栏 / 内容区 / 页脚，`hoverable` / `padded` 开关）。
+- `Label` 表单标签（`required` 必填星号）。
+
+**选择控件（5）**
+
+- `Segmented` 分段控件（画廊「分类 tabs」与「网格 / 列表视图切换」的组件化）。
+- `RadioGroup` 单选组（`SettingsFormDemo` 的原生 radio 已替换）。
+- `Toggle` / `ToggleGroup` 双态按钮与按钮组。
+- `Rate` 星级评分（重复点击同一颗星可清除）。
+
+**浮层扩展与加载（3）**
+
+- `Popover` 气泡卡片（受控 / 非受控双模式，Escape 与外部点击关闭）。
+- `HoverCard` 悬停卡片（悬停 / 键盘聚焦，纯 CSS 驱动）。
+- `Spin` 独立加载指示器。
+
+**表单抽象（2）**
+
+- `useForm` 校验 hook（`required` / `pattern` / `min` / `max` 规则，提交时全量校验）。
+- `FormItem` 表单项包装（错误输出 `role="alert"`）。
+
+**命令面板（1）**
+
+- `Command`：基于 `Modal` 的命令面板，输入过滤、↑↓ 导航、Enter 选择；展示站 `⌘K` 已接入（页面导航 / 主题切换 / 下载源码 / 预览 404）。
+
+**日期（2）**
+
+- `Calendar` 月历（周一起始、键盘导航、`minDate` / `maxDate` 禁用）。
+- `DatePicker` 日期选择器（输入框 + Popover + Calendar）。
+
+**展示与布局（5）**
+
+- `Carousel` 轮播（`autoPlay`、箭头、指示点）。
+- `Grid` / `GridItem` 栅格布局（`span` 按父级列数自动裁剪）。
+- `ConfigProvider` / `useSkyUIConfig` 全局配置（主题类 + 默认尺寸，`Button` 已接入）。
+
+### Enhanced 增强
+
+- `Table` 新增 `loading`（骨架行）、`sticky`（粘性表头）、`expandable`（行展开）三个 props。
+- `Button` 的 `size` 改为可选，缺省时读取 `ConfigProvider` 注入的默认尺寸。
+- 展示站：画廊新增 15 张卡片（46 → 61），`SettingsFormDemo` 改用 `RadioGroup`，下载对话框与更新日志同步至 58 个组件口径。
+
+### Infrastructure 工程
+
+- 测试 12 → 31 个用例，覆盖全部新组件（含 Calendar 键盘导航、useForm 校验流程、Command 过滤选择）。
+- 新增 `src/test-setup.ts`：为 jsdom 补齐 `HTMLDialogElement` polyfill（jsdom 未实现 `showModal` / `close`），使基于原生 `dialog` 的组件可测试。
+- 测试文件显式 `afterEach(cleanup)`，消除跨用例渲染累积。
+
 ## [1.2.1] - 2026-10-12
 
 ### Removed 移除

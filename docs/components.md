@@ -12,7 +12,9 @@
 
 ---
 
-## 基础组件（ui.tsx，12 个）
+## 基础组件（ui.tsx，12 个 · v1.1.0）
+
+> 自 v1.2.0 起全部组件同在 `ui.tsx`，本节的「12 个」指最初的首批基础组件。
 
 ### Button
 
@@ -310,7 +312,7 @@ toast('一切就绪。', { variant: 'success' })
 
 ### Table
 
-泛型表格，columns 配置式 API。排序 / 筛选等行为由使用方组合（参考 `DataTableDemo`）。
+泛型表格，columns 配置式 API。v1.3.0 起内置加载态、粘性表头与行展开。
 
 | Prop | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
@@ -319,12 +321,18 @@ toast('一切就绪。', { variant: 'success' })
 | `caption` | `string` | — | 可选，`<caption>` |
 | `rowKey` | `(row: T, index: number) => React.Key` | 下标 | 行 key |
 | `empty` | `ReactNode` | — | 空数据占位（`colSpan` 全行） |
+| `loading` | `boolean` | `false` | 渲染 3 行骨架屏，不渲染数据行 |
+| `sticky` | `boolean` | `false` | 表头 `position: sticky`，长表格滚动时固定 |
+| `expandable` | `{ expandedRowRender: (row: T) => ReactNode; rowExpandable?: (row: T) => boolean }` | — | 行展开：首列渲染展开按钮，展开内容渲染为整行 |
 
 ```tsx
 <Table
   caption="素材清单"
   rowKey={row => row.id}
   rows={rows}
+  loading={loading}
+  sticky
+  expandable={{ expandedRowRender: row => <p>{row.detail}</p> }}
   columns={[
     { key: 'name', header: '素材', render: row => <strong>{row.name}</strong> },
     { key: 'state', header: '状态', render: row => <Badge variant="outline">{row.state}</Badge> },
@@ -347,6 +355,83 @@ toast('一切就绪。', { variant: 'success' })
 | `Divider` | `label?: string; vertical?: boolean` | 分隔线；`label` 居中文案；`vertical` 竖向 |
 | `Stack` | `direction?: 'row' \| 'column'; gap?: number(12); align?; justify?; wrap?` | flex 布局原语 |
 | `Container` | `maxWidth?: number(960)` | 居中容器 |
+
+---
+
+## v1.3.0 新增组件（ui.tsx，24 个导出）
+
+### 排版与容器
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Title` | `level?: 1\|2\|3\|4(2); children; className?` | 渲染对应 `h1`~`h4`，统一黑白标题层级 |
+| `Text` | `type?: 'default'\|'secondary'\|'muted'; strong?; underline?; strikethrough?; code?; mark?; children` | 行内文本；`code` 渲染 `<code>`，`mark` 渲染 `<mark>` |
+| `Paragraph` | `children; className?` | 正文段落（12px / 行高 1.8） |
+| `Kbd` | `children; className?` | 键盘按键，如 `<Kbd>⌘K</Kbd>` |
+| `Card` | `title?; extra?; footer?; hoverable?; padded?(true); children; className?` | 卡片容器，含标题栏 / 内容区 / 页脚三段结构 |
+| `Label` | `children; htmlFor?; required?; className?` | 表单标签，`required` 追加必填星号 |
+
+### 选择控件
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Segmented` | `options: (string \| { value; label; disabled? })[]; value; onChange; size?: 'sm'\|'md'` | 分段控件，`role="radiogroup"`，选项可为字符串或对象 |
+| `RadioGroup` | `options; value; onChange; name?; direction?: 'row'\|'column'` | 单选组，自动生成共享 `name` |
+| `Toggle` | `pressed; onChange; children; ariaLabel?` | 双态按钮，输出 `aria-pressed` |
+| `ToggleGroup` | `options; value: string[]; onChange; multiple?` | 切换按钮组；`multiple=false` 时单选互斥 |
+| `Rate` | `count?(5); value; onChange?; allowClear?(true)` | 星级评分，`role="radio"`，重复点击同一颗星清零 |
+
+### 浮层扩展与加载
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Popover` | `trigger; content; align?: 'start'\|'end'; open?; onOpenChange?` | 点击式气泡卡片，承载交互内容；支持受控 / 非受控 |
+| `HoverCard` | `content; children` | 悬停 / 键盘聚焦显示的卡片，纯 CSS 驱动 |
+| `Spin` | `size?: 'sm'\|'md'\|'lg'; label?('加载中')` | 独立加载指示器，`role="status"` |
+
+### 表单抽象
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `useForm` | `{ initialValues; rules?: { [K in keyof T]?: { required?; pattern?; min?; max?; message? } }; onSubmit? }` | 返回 `{ values, errors, setField, handleSubmit }`；提交时全量校验，通过后回调 |
+| `FormItem` | `label; error?; htmlFor?; required?; children` | 表单项包装，`error` 存在时输出 `role="alert"` 提示 |
+
+```tsx
+const { values, errors, setField, handleSubmit } = useForm({
+  initialValues: { email: '' },
+  rules: { email: { required: true, pattern: /@/, message: '需要有效邮箱。' } },
+  onSubmit: values => submit(values),
+})
+<form onSubmit={handleSubmit}>
+  <FormItem label="邮箱" error={errors.email} htmlFor="email">
+    <Input id="email" value={values.email} onChange={event => setField('email', event.target.value)} />
+  </FormItem>
+  <Button type="submit">提交</Button>
+</form>
+```
+
+### 命令面板
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Command` | `open; onClose; items: { id; label; group?; onSelect? }[]; placeholder?; emptyText?` | 基于 `Modal` 的命令面板：输入过滤、↑↓ 导航、Enter 选择、Esc 关闭 |
+
+### 日期
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Calendar` | `value?: Date \| null; onChange?; minDate?; maxDate?` | 月历网格（周一起始），←→↑↓ 移动、PageUp/PageDown 换月、Enter 选择；`minDate`/`maxDate` 置灰禁用 |
+| `DatePicker` | `value?; onChange?; placeholder?('选择日期'); label?; minDate?; maxDate?` | 输入框 + `Popover` + `Calendar`，选择后自动收起 |
+
+### 展示与布局
+
+| 组件 | Props | 说明 |
+| --- | --- | --- |
+| `Carousel` | `items: ReactNode[]; autoPlay?; interval?(4000)` | 轮播：左右箭头 + 指示点，非当前页 `aria-hidden` |
+| `Grid` | `cols?(12); gap?(12)` | CSS Grid 容器，通过 context 传递列数 |
+| `GridItem` | `span?(12)` | 栅格列，`span` 自动按父级 `cols` 裁剪 |
+| `ConfigProvider` | `theme?: 'light'\|'dark'; size?: 'sm'\|'md'\|'lg'` | 注入主题类与默认尺寸（当前 `Button` 消费 `size`，`theme` 输出 `skyui-theme-*` 类） |
+| `useSkyUIConfig` | — | 读取 `ConfigProvider` 注入的配置 |
 
 ---
 

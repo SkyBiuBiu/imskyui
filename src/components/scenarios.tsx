@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
-import { Alert, Badge, Breadcrumb, Button, Checkbox, EmptyState, HttpStatusPage, Input, Pagination, Select, Skeleton, Steps, Switch, Table, Textarea } from './ui'
+import { Alert, Badge, Breadcrumb, Button, Checkbox, EmptyState, HttpStatusPage, Input, Pagination, RadioGroup, Select, Skeleton, Steps, Switch, Table, Textarea } from './ui'
 import './scenarios.css'
 
 export const httpScenarios = [
@@ -104,12 +104,11 @@ export function SettingsFormDemo() {
   const [digest, setDigest] = useState('每周摘要')
   const [visibility, setVisibility] = useState('公开')
   const [saved, setSaved] = useState(false)
-  const visibilityId = useId()
   function reset() { setNotifications(true); setDigest('每周摘要'); setVisibility('公开'); setSaved(false) }
   return <form className="skyui-scenario skyui-demo-form" onSubmit={event => { event.preventDefault(); setSaved(true) }} onChange={() => setSaved(false)}>
     <div className="skyui-setting-row"><div><strong>接收更新通知</strong><small>让重要的变化被看见</small></div><Switch label="接收更新通知" checked={notifications} onChange={value => { setNotifications(value); setSaved(false) }} /></div>
     <Select label="通知频率" value={digest} disabled={!notifications} onChange={event => setDigest(event.target.value)}><option>每周摘要</option><option>每日摘要</option><option>仅重要更新</option></Select>
-    <fieldset className="skyui-radio-group"><legend>作品可见性</legend>{['公开', '仅自己'].map(option => <label key={option}><input type="radio" name={visibilityId} checked={visibility === option} onChange={() => setVisibility(option)} />{option}</label>)}</fieldset>
+    <div className="skyui-setting-block"><strong>作品可见性</strong><RadioGroup ariaLabel="作品可见性" options={['公开', '仅自己']} value={visibility} onChange={setVisibility} /></div>
     <div className="skyui-action-row"><Button type="submit">应用设置</Button><Button variant="secondary" onClick={reset}>重置</Button></div>
     {saved && <Alert title="已应用到当前预览" variant="success">刷新页面后恢复默认，不会写入账户。</Alert>}
     <small className="skyui-demo-note">设置仅存在于当前组件会话</small>

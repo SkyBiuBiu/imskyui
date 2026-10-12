@@ -1,15 +1,19 @@
-import { createContext, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
-import type { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
+import { createContext, Fragment, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+import type { ButtonHTMLAttributes, FormEvent, HTMLAttributes, InputHTMLAttributes, KeyboardEvent as ReactKeyboardEvent, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 import './ui.css'
+
+const ConfigContext = createContext<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' | 'lg' }>({})
+const GridContext = createContext(12)
 
 /* ------------------------------------------------------------------ */
 /* 基础控件                                                            */
 /* ------------------------------------------------------------------ */
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: 'primary' | 'secondary' | 'ghost'; size?: 'sm' | 'md' | 'lg'; loading?: boolean }
-
-export function Button({ variant = 'primary', size = 'md', loading = false, className = '', type = 'button', disabled, children, ...props }: ButtonProps) {
-  const sizeClass = size === 'md' ? '' : ` skyui-button-${size}`
+export function Button({ variant = 'primary', size, loading = false, className = '', type = 'button', disabled, children, ...props }: ButtonProps) {
+  const config = useContext(ConfigContext)
+  const resolvedSize = size ?? config.size ?? 'md'
+  const sizeClass = resolvedSize === 'md' ? '' : ` skyui-button-${resolvedSize}`
   return <button type={type} disabled={disabled || loading} aria-busy={loading || undefined} className={`skyui-button skyui-button-${variant}${sizeClass} ${loading ? 'skyui-button-loading' : ''} ${className}`} {...props}>{loading && <span className="skyui-spinner" aria-hidden="true" />}{children}</button>
 }
 
@@ -284,14 +288,38 @@ export function Tag({ children, onRemove, className = '' }: { children: ReactNod
 
 export type TableColumn<T> = { key: string; header: ReactNode; render?: (row: T) => ReactNode; width?: number | string }
 
-export function Table<T>({ columns, rows, caption, rowKey, empty, className = '' }: { columns: TableColumn<T>[]; rows: T[]; caption?: string; rowKey?: (row: T, index: number) => React.Key; empty?: ReactNode; className?: string }) {
+export function Table<T>({ columns, rows, caption, rowKey, empty, loading = false, sticky = false, expandable, className = '' }: { columns: TableColumn<T>[]; rows: T[]; caption?: string; rowKey?: (row: T, index: number) => React.Key; empty?: ReactNode; loading?: boolean; sticky?: boolean; expandable?: { expandedRowRender: (row: T) => ReactNode; rowExpandable?: (row: T) => boolean }; className?: string }) {
+  const [expanded, setExpanded] = useState<Set<React.Key>>(new Set())
+  const keyOf = (row: T, index: number) => rowKey ? rowKey(row, index) : index
+  const toggle = (key: React.Key) => setExpanded(previous => {
+    const next = new Set(previous)
+    if (next.has(key)) next.delete(key)
+    else next.add(key)
+    return next
+  })
+  const cellCount = columns.length + (expandable ? 1 : 0)
   return <div className={`skyui-table-wrap ${className}`}>
-    <table className="skyui-table">
+    <table className={`skyui-table ${sticky ? 'skyui-table-sticky' : ''}`}>
       {caption && <caption>{caption}</caption>}
-      <thead><tr>{columns.map(column => <th key={column.key} scope="col" style={column.width !== undefined ? { width: column.width } : undefined}>{column.header}</th>)}</tr></thead>
+      <thead><tr>
+        {expandable && <th className="skyui-table-expand-head" scope="col"><span className="skyui-sr-only">展开操作</span></th>}
+        {columns.map(column => <th key={column.key} scope="col" style={column.width !== undefined ? { width: column.width } : undefined}>{column.header}</th>)}
+      </tr></thead>
       <tbody>
-        {rows.map((row, index) => <tr key={rowKey ? rowKey(row, index) : index}>{columns.map(column => <td key={column.key}>{column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}</td>)}</tr>)}
-        {rows.length === 0 && <tr><td colSpan={columns.length}>{empty}</td></tr>}
+        {loading ? [0, 1, 2].map(index => <tr key={`skyui-skeleton-${index}`}>{Array.from({ length: cellCount }, (_, cell) => <td key={cell}><Skeleton /></td>)}</tr>)
+          : rows.map((row, index) => {
+            const key = keyOf(row, index)
+            const isOpen = expanded.has(key)
+            const canExpand = expandable && (expandable.rowExpandable ? expandable.rowExpandable(row) : true)
+            return <Fragment key={key}>
+              <tr>
+                {expandable && <td className="skyui-table-expand-cell">{canExpand ? <button type="button" aria-expanded={isOpen} aria-label={isOpen ? '收起详情' : '展开详情'} className="skyui-table-expand-button" onClick={() => toggle(key)}>{isOpen ? '−' : '+'}</button> : null}</td>}
+                {columns.map(column => <td key={column.key}>{column.render ? column.render(row) : String((row as Record<string, unknown>)[column.key] ?? '')}</td>)}
+              </tr>
+              {expandable && isOpen && canExpand && <tr className="skyui-table-expanded-row"><td colSpan={cellCount}>{expandable.expandedRowRender(row)}</td></tr>}
+            </Fragment>
+          })}
+        {!loading && rows.length === 0 && <tr><td colSpan={cellCount}>{empty}</td></tr>}
       </tbody>
     </table>
   </div>
@@ -331,4 +359,318 @@ export function Descriptions({ items, className = '' }: { items: { label: string
   return <dl className={`skyui-descriptions ${className}`}>
     {items.map(item => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
   </dl>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 排版与容器（Title / Text / Paragraph / Kbd / Card / Label）   */
+/* ------------------------------------------------------------------ */
+
+export function Title({ level = 2, children, className = '' }: { level?: 1 | 2 | 3 | 4; children: ReactNode; className?: string }) {
+  const Tag = `h${level}` as 'h1' | 'h2' | 'h3' | 'h4'
+  return <Tag className={`skyui-title skyui-title-${level} ${className}`}>{children}</Tag>
+}
+
+export function Text({ type = 'default', strong = false, underline = false, strikethrough = false, code = false, mark = false, children, className = '' }: { type?: 'default' | 'secondary' | 'muted'; strong?: boolean; underline?: boolean; strikethrough?: boolean; code?: boolean; mark?: boolean; children: ReactNode; className?: string }) {
+  const classes = [`skyui-text`, type !== 'default' ? `skyui-text-${type}` : '', strong ? 'skyui-text-strong' : '', underline ? 'skyui-text-underline' : '', strikethrough ? 'skyui-text-delete' : '', className].filter(Boolean).join(' ')
+  if (code) return <code className={`${classes} skyui-text-code`}>{children}</code>
+  return <span className={classes}>{mark ? <mark>{children}</mark> : children}</span>
+}
+
+export function Paragraph({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <p className={`skyui-paragraph ${className}`}>{children}</p>
+}
+
+export function Kbd({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <kbd className={`skyui-kbd ${className}`}>{children}</kbd>
+}
+
+export function Card({ title, extra, footer, hoverable = false, padded = true, children, className = '' }: { title?: ReactNode; extra?: ReactNode; footer?: ReactNode; hoverable?: boolean; padded?: boolean; children?: ReactNode; className?: string }) {
+  return <section className={`skyui-card ${hoverable ? 'skyui-card-hoverable' : ''} ${className}`}>
+    {(title || extra) && <header className="skyui-card-header"><div className="skyui-card-title">{title}</div>{extra && <div className="skyui-card-extra">{extra}</div>}</header>}
+    <div className={`skyui-card-body ${padded ? '' : 'skyui-card-body-flush'}`}>{children}</div>
+    {footer && <footer className="skyui-card-footer">{footer}</footer>}
+  </section>
+}
+
+export function Label({ children, htmlFor, required = false, className = '' }: { children: ReactNode; htmlFor?: string; required?: boolean; className?: string }) {
+  return <label htmlFor={htmlFor} className={`skyui-label ${className}`}>{children}{required && <span className="skyui-label-required" aria-hidden="true">*</span>}</label>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 选择控件（Segmented / RadioGroup / Toggle / Rate）            */
+/* ------------------------------------------------------------------ */
+
+type ChoiceOption = { value: string; label: ReactNode; disabled?: boolean }
+
+function normalizeOptions(options: (string | ChoiceOption)[]): ChoiceOption[] {
+  return options.map(option => typeof option === 'string' ? { value: option, label: option } : option)
+}
+
+export function Segmented({ options, value, onChange, ariaLabel, size = 'md', className = '' }: { options: (string | ChoiceOption)[]; value: string; onChange: (value: string) => void; ariaLabel?: string; size?: 'sm' | 'md'; className?: string }) {
+  return <div className={`skyui-segmented skyui-segmented-${size} ${className}`} role="radiogroup" aria-label={ariaLabel}>
+    {normalizeOptions(options).map(option => <button key={option.value} type="button" role="radio" aria-checked={value === option.value} disabled={option.disabled} className={value === option.value ? 'skyui-segmented-active' : ''} onClick={() => onChange(option.value)}>{option.label}</button>)}
+  </div>
+}
+
+export function RadioGroup({ options, value, onChange, name, ariaLabel, direction = 'column', className = '' }: { options: (string | ChoiceOption)[]; value: string; onChange: (value: string) => void; name?: string; ariaLabel?: string; direction?: 'row' | 'column'; className?: string }) {
+  const generatedId = useId()
+  const groupName = name || `skyui-radio-${generatedId}`
+  return <div className={`skyui-radio-group skyui-radio-group-${direction} ${className}`} role="radiogroup" aria-label={ariaLabel}>
+    {normalizeOptions(options).map(option => <label key={option.value} className="skyui-radio"><input type="radio" name={groupName} value={option.value} checked={value === option.value} disabled={option.disabled} onChange={() => onChange(option.value)} /><span>{option.label}</span></label>)}
+  </div>
+}
+
+export function Toggle({ pressed, onChange, children, ariaLabel, className = '' }: { pressed: boolean; onChange: (pressed: boolean) => void; children: ReactNode; ariaLabel?: string; className?: string }) {
+  return <button type="button" aria-pressed={pressed} aria-label={ariaLabel} className={`skyui-toggle ${pressed ? 'skyui-toggle-pressed' : ''} ${className}`} onClick={() => onChange(!pressed)}>{children}</button>
+}
+
+export function ToggleGroup({ options, value, onChange, multiple = false, ariaLabel, className = '' }: { options: (string | ChoiceOption)[]; value: string[]; onChange: (value: string[]) => void; multiple?: boolean; ariaLabel?: string; className?: string }) {
+  function toggle(optionValue: string) {
+    const active = value.includes(optionValue)
+    if (multiple) onChange(active ? value.filter(item => item !== optionValue) : [...value, optionValue])
+    else onChange(active ? [] : [optionValue])
+  }
+  return <div className={`skyui-toggle-group ${className}`} role="group" aria-label={ariaLabel}>
+    {normalizeOptions(options).map(option => <Toggle key={option.value} pressed={value.includes(option.value)} onChange={() => toggle(option.value)} ariaLabel={typeof option.label === 'string' ? option.label : option.value}>{option.label}</Toggle>)}
+  </div>
+}
+
+export function Rate({ count = 5, value = 0, onChange, allowClear = true, ariaLabel = '评分', className = '' }: { count?: number; value?: number; onChange?: (value: number) => void; allowClear?: boolean; ariaLabel?: string; className?: string }) {
+  return <div className={`skyui-rate ${className}`} role="radiogroup" aria-label={ariaLabel}>
+    {Array.from({ length: count }, (_, index) => {
+      const star = index + 1
+      return <button key={star} type="button" role="radio" aria-checked={value === star} aria-label={`${star} 星`} className={value >= star ? 'skyui-rate-star skyui-rate-on' : 'skyui-rate-star'} onClick={() => onChange?.(allowClear && value === star ? 0 : star)}>★</button>
+    })}
+  </div>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 浮层扩展（Popover / HoverCard / Spin）                        */
+/* ------------------------------------------------------------------ */
+
+export function Popover({ trigger, content, align = 'start', ariaLabel = '气泡卡片', open, onOpenChange, className = '' }: { trigger: ReactNode; content: ReactNode; align?: 'start' | 'end'; ariaLabel?: string; open?: boolean; onOpenChange?: (open: boolean) => void; className?: string }) {
+  const [internal, setInternal] = useState(false)
+  const isOpen = open ?? internal
+  const rootRef = useRef<HTMLDivElement>(null)
+  function setOpen(value: boolean) {
+    if (open === undefined) setInternal(value)
+    onOpenChange?.(value)
+  }
+  useEffect(() => {
+    if (!isOpen) return
+    function onPointerDown(event: PointerEvent) { if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false) }
+    function onKeyDown(event: KeyboardEvent) { if (event.key === 'Escape') setOpen(false) }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => { document.removeEventListener('pointerdown', onPointerDown); document.removeEventListener('keydown', onKeyDown) }
+  }, [isOpen])
+  return <div ref={rootRef} className={`skyui-popover ${className}`}>
+    <button type="button" aria-haspopup="dialog" aria-expanded={isOpen} className="skyui-popover-trigger" onClick={() => setOpen(!isOpen)}>{trigger}</button>
+    {isOpen && <div className={`skyui-popover-panel skyui-popover-${align}`} role="dialog" aria-label={ariaLabel}>{content}</div>}
+  </div>
+}
+
+export function HoverCard({ content, children, className = '' }: { content: ReactNode; children: ReactNode; className?: string }) {
+  return <span className={`skyui-hovercard ${className}`} tabIndex={0}>{children}<span className="skyui-hovercard-panel" role="tooltip">{content}</span></span>
+}
+
+export function Spin({ size = 'md', label = '加载中', className = '' }: { size?: 'sm' | 'md' | 'lg'; label?: string; className?: string }) {
+  return <span role="status" aria-label={label} className={`skyui-spin skyui-spin-${size} ${className}`}><span className="skyui-spin-ring" aria-hidden="true" /></span>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 表单抽象（useForm / FormItem）                                */
+/* ------------------------------------------------------------------ */
+
+type FormRule = { required?: boolean; pattern?: RegExp; min?: number; max?: number; message?: string }
+type FormRules<T> = { [K in keyof T]?: FormRule }
+
+function validateField(value: unknown, rule: FormRule | undefined): string | null {
+  if (!rule) return null
+  const text = value === undefined || value === null ? '' : String(value)
+  if (rule.required && text.trim() === '') return rule.message || '此项为必填。'
+  if (rule.pattern && text !== '' && !rule.pattern.test(text)) return rule.message || '格式不正确。'
+  if (typeof value === 'number' && rule.min !== undefined && value < rule.min) return rule.message || `不能小于 ${rule.min}。`
+  if (typeof value === 'number' && rule.max !== undefined && value > rule.max) return rule.message || `不能大于 ${rule.max}。`
+  return null
+}
+
+export function useForm<T extends Record<string, unknown>>({ initialValues, rules, onSubmit }: { initialValues: T; rules?: FormRules<T>; onSubmit?: (values: T) => void }) {
+  const [values, setValues] = useState<T>(initialValues)
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
+  function setField<K extends keyof T>(name: K, value: T[K]) {
+    setValues(previous => ({ ...previous, [name as string]: value }))
+    if (rules?.[name]) setErrors(previous => ({ ...previous, [name]: validateField(value, rules[name]) ?? undefined }))
+  }
+  function handleSubmit(event?: FormEvent) {
+    event?.preventDefault()
+    const nextErrors: Partial<Record<keyof T, string>> = {}
+    for (const name of Object.keys(initialValues) as (keyof T)[]) {
+      const message = validateField(values[name], rules?.[name])
+      if (message) nextErrors[name] = message
+    }
+    setErrors(nextErrors)
+    if (Object.keys(nextErrors).length === 0) onSubmit?.(values)
+  }
+  return { values, errors, setField, handleSubmit }
+}
+
+export function FormItem({ label, error, htmlFor, required = false, children }: { label: string; error?: string; htmlFor?: string; required?: boolean; children: ReactNode }) {
+  return <div className={`skyui-form-item ${error ? 'skyui-form-item-invalid' : ''}`}>
+    <Label htmlFor={htmlFor} required={required}>{label}</Label>
+    {children}
+    {error && <small className="skyui-form-item-error" role="alert">{error}</small>}
+  </div>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 命令面板（Command）                                           */
+/* ------------------------------------------------------------------ */
+
+type CommandItem = { id: string; label: string; group?: string; onSelect?: () => void }
+
+export function Command({ open, onClose, items, placeholder = '搜索命令…', emptyText = '没有匹配的命令。', ariaLabel = '命令面板' }: { open: boolean; onClose: () => void; items: CommandItem[]; placeholder?: string; emptyText?: string; ariaLabel?: string }) {
+  const [query, setQuery] = useState('')
+  const [activeIndex, setActiveIndex] = useState(0)
+  const keyword = query.trim().toLowerCase()
+  const filtered = keyword === '' ? items : items.filter(item => item.label.toLowerCase().includes(keyword))
+  const active = filtered[Math.min(activeIndex, Math.max(0, filtered.length - 1))]
+  function select(item: CommandItem | undefined) {
+    if (!item) return
+    item.onSelect?.()
+    setQuery('')
+    setActiveIndex(0)
+    onClose()
+  }
+  function onKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'ArrowDown') { event.preventDefault(); setActiveIndex(index => Math.min(index + 1, filtered.length - 1)) }
+    if (event.key === 'ArrowUp') { event.preventDefault(); setActiveIndex(index => Math.max(index - 1, 0)) }
+    if (event.key === 'Enter') { event.preventDefault(); select(active) }
+  }
+  return <Modal open={open} onClose={() => { setQuery(''); setActiveIndex(0); onClose() }} className="skyui-command" title={<span className="skyui-command-heading">{ariaLabel}</span>}>
+    <input className="skyui-input" autoFocus placeholder={placeholder} aria-label={placeholder} value={query} onChange={event => { setQuery(event.target.value); setActiveIndex(0) }} onKeyDown={onKeyDown} />
+    <ul className="skyui-command-list" role="listbox" aria-label={`${ariaLabel}结果`}>
+      {filtered.map((item, index) => <li key={item.id} role="option" aria-selected={item === active} className={item === active ? 'skyui-command-active' : ''} onMouseEnter={() => setActiveIndex(index)} onClick={() => select(item)}>{item.group && <small>{item.group}</small>}<span>{item.label}</span></li>)}
+      {filtered.length === 0 && <li className="skyui-command-empty">{emptyText}</li>}
+    </ul>
+  </Modal>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 日期（Calendar / DatePicker）                                 */
+/* ------------------------------------------------------------------ */
+
+function startOfMonth(date: Date) { return new Date(date.getFullYear(), date.getMonth(), 1) }
+function sameDay(a: Date, b: Date) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate() }
+function isSameMonth(a: Date, b: Date) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() }
+function buildMonthGrid(viewMonth: Date): Date[] {
+  const first = startOfMonth(viewMonth)
+  const offset = (first.getDay() + 6) % 7
+  const cells: Date[] = []
+  for (let index = 0; index < 42; index += 1) cells.push(new Date(first.getFullYear(), first.getMonth(), 1 - offset + index))
+  return cells
+}
+
+export function Calendar({ value, onChange, minDate, maxDate, className = '' }: { value?: Date | null; onChange?: (date: Date) => void; minDate?: Date; maxDate?: Date; className?: string }) {
+  const today = new Date()
+  const initial = value ?? today
+  const [viewMonth, setViewMonth] = useState(() => startOfMonth(initial))
+  const [cursor, setCursor] = useState(() => new Date(initial))
+  const cells = buildMonthGrid(viewMonth)
+  function disabled(date: Date) {
+    if (minDate && date < startOfDay(minDate)) return true
+    if (maxDate && date > startOfDay(maxDate)) return true
+    return false
+  }
+  function onKeyDown(event: ReactKeyboardEvent<HTMLTableSectionElement>) {
+    const step: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }
+    if (event.key in step) {
+      event.preventDefault()
+      const next = new Date(cursor)
+      next.setDate(next.getDate() + step[event.key])
+      setCursor(next)
+      if (!isSameMonth(next, viewMonth)) setViewMonth(startOfMonth(next))
+      return
+    }
+    if (event.key === 'PageUp' || event.key === 'PageDown') {
+      event.preventDefault()
+      const next = new Date(cursor)
+      next.setMonth(next.getMonth() + (event.key === 'PageUp' ? -1 : 1))
+      setCursor(next)
+      setViewMonth(startOfMonth(next))
+    }
+  }
+  return <div className={`skyui-calendar ${className}`}>
+    <div className="skyui-calendar-head">
+      <button type="button" aria-label="上一个月" onClick={() => { const next = new Date(viewMonth); next.setMonth(next.getMonth() - 1); setViewMonth(next) }}>←</button>
+      <strong>{viewMonth.getFullYear()} 年 {viewMonth.getMonth() + 1} 月</strong>
+      <button type="button" aria-label="下一个月" onClick={() => { const next = new Date(viewMonth); next.setMonth(next.getMonth() + 1); setViewMonth(next) }}>→</button>
+    </div>
+    <table className="skyui-calendar-grid" role="grid" aria-label="日期选择">
+      <thead><tr>{['一', '二', '三', '四', '五', '六', '日'].map(weekday => <th key={weekday} scope="col" abbr={weekday}>{weekday}</th>)}</tr></thead>
+      <tbody onKeyDown={onKeyDown}>
+        {Array.from({ length: 6 }, (_, week) => <tr key={week}>{cells.slice(week * 7, week * 7 + 7).map(date => {
+          const selected = value ? sameDay(date, value) : false
+          const outside = !isSameMonth(date, viewMonth)
+          return <td key={date.toISOString()} role="gridcell" aria-selected={selected}>
+            <button type="button" tabIndex={sameDay(date, cursor) ? 0 : -1} className={[selected ? 'skyui-calendar-selected' : '', outside ? 'skyui-calendar-outside' : '', sameDay(date, today) ? 'skyui-calendar-today' : ''].filter(Boolean).join(' ')} disabled={disabled(date)} aria-label={`${date.getFullYear()} 年 ${date.getMonth() + 1} 月 ${date.getDate()} 日`} onClick={() => { onChange?.(date); setCursor(date) }} onFocus={() => setCursor(date)}>{date.getDate()}</button>
+          </td>
+        })}</tr>)}
+      </tbody>
+    </table>
+  </div>
+}
+
+function startOfDay(date: Date) { return new Date(date.getFullYear(), date.getMonth(), date.getDate()) }
+
+export function DatePicker({ value, onChange, placeholder = '选择日期', label, minDate, maxDate, className = '' }: { value?: Date | null; onChange?: (date: Date) => void; placeholder?: string; label?: string; minDate?: Date; maxDate?: Date; className?: string }) {
+  const [open, setOpen] = useState(false)
+  const display = value ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}` : ''
+  return <Popover className={className} ariaLabel="日期选择" open={open} onOpenChange={setOpen} trigger={<span className="skyui-datepicker-trigger">{label && <span className="skyui-datepicker-label">{label}</span>}{display || <span className="skyui-datepicker-placeholder">{placeholder}</span>}<span aria-hidden="true">▾</span></span>} content={<Calendar value={value} minDate={minDate} maxDate={maxDate} onChange={date => { onChange?.(date); setOpen(false) }} />} />
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 展示增强（Carousel / ToggleGroup 之外的重组件）                */
+/* ------------------------------------------------------------------ */
+
+export function Carousel({ items, autoPlay = false, interval = 4000, ariaLabel = '轮播' }: { items: ReactNode[]; autoPlay?: boolean; interval?: number; ariaLabel?: string }) {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    if (!autoPlay || items.length <= 1) return
+    const timer = window.setInterval(() => setIndex(current => (current + 1) % items.length), interval)
+    return () => window.clearInterval(timer)
+  }, [autoPlay, interval, items.length])
+  return <div className="skyui-carousel" role="group" aria-label={ariaLabel} aria-roledescription="轮播">
+    <div className="skyui-carousel-viewport">{items.map((item, slide) => <div key={slide} className="skyui-carousel-slide" role="group" aria-roledescription="幻灯片" aria-label={`第 ${slide + 1} 张，共 ${items.length} 张`} aria-hidden={index !== slide} hidden={index !== slide}>{item}</div>)}</div>
+    {items.length > 1 && <>
+      <button type="button" className="skyui-carousel-arrow skyui-carousel-prev" aria-label="上一张" onClick={() => setIndex(current => (current - 1 + items.length) % items.length)}>←</button>
+      <button type="button" className="skyui-carousel-arrow skyui-carousel-next" aria-label="下一张" onClick={() => setIndex(current => (current + 1) % items.length)}>→</button>
+      <div className="skyui-carousel-dots" role="tablist" aria-label="选择幻灯片">{items.map((_item, slide) => <button key={slide} type="button" role="tab" aria-selected={index === slide} aria-label={`第 ${slide + 1} 张`} className={index === slide ? 'skyui-carousel-dot-active' : ''} onClick={() => setIndex(slide)} />)}</div>
+    </>}
+  </div>
+}
+
+/* ------------------------------------------------------------------ */
+/* v1.3.0 · 布局与配置（Grid / GridItem / ConfigProvider）                */
+/* ------------------------------------------------------------------ */
+
+export function Grid({ cols = 12, gap = 12, children, className = '' }: { cols?: number; gap?: number; children: ReactNode; className?: string }) {
+  return <GridContext.Provider value={cols}><div className={`skyui-grid ${className}`} style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap }}>{children}</div></GridContext.Provider>
+}
+
+export function GridItem({ span = 12, children, className = '' }: { span?: number; children: ReactNode; className?: string }) {
+  const cols = useContext(GridContext)
+  const clamped = Math.max(1, Math.min(span, cols))
+  return <div className={`skyui-grid-item ${className}`} style={{ gridColumn: `span ${clamped}` }}>{children}</div>
+}
+
+type SkyUIConfig = { theme?: 'light' | 'dark'; size?: 'sm' | 'md' | 'lg' }
+
+export function ConfigProvider({ theme, size, children, className = '' }: SkyUIConfig & { children: ReactNode; className?: string }) {
+  const themeClass = theme ? `skyui-theme-${theme}` : ''
+  return <div className={`${themeClass} ${className}`}><ConfigContext.Provider value={{ theme, size }}>{children}</ConfigContext.Provider></div>
+}
+
+export function useSkyUIConfig() {
+  return useContext(ConfigContext)
 }

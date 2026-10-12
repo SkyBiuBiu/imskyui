@@ -16,7 +16,7 @@
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](#许可证)
 
-**46** 个组件与场景 · **34** 个组件与工具 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
+**61** 个组件与场景 · **58** 个组件与工具 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
 
 [快速开始](#这是什么) · [组件 API](docs/components.md) · [更新日志](CHANGELOG.md) · [English](README.en.md) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
 
@@ -29,14 +29,14 @@
 SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走**的黑白设计语言。
 
 - **拿走即用** —— 点击「开始使用」下载 `ui.tsx` 和 `ui.css` 两个文件，扔进 React 项目就能跑，不需要装任何 npm 包。
-- **不止于控件** —— 除了 34 个组件与工具（含浮层、导航、表格、统计），还提供表单校验、分步表单、文件上传、数据表格、骨架屏等完整场景。
+- **不止于控件** —— 58 个组件与工具，覆盖排版、卡片、浮层、导航、表格、日期选择与命令面板，另提供表单校验、分步表单、文件上传、数据表格、骨架屏等完整场景。
 - **覆盖异常路径** —— 18 种 HTTP 状态页面（200 到 504），包含带倒计时重试的 429。
 - **两套主题** —— 浅色与深色通过一个 CSS class 切换，所有组件自动跟随。
 - **零图片资源** —— 所有几何视觉由 CSS 绘制，首屏没有一张外部图片要加载。
 
 ![SkyUI 组件画廊总览](docs/images/01-gallery-light.png)
 
-> 上图：组件画廊首屏。左侧为设计系统导航，顶部支持 `⌘K` / `Ctrl+K` 快速搜索，
+> 上图：组件画廊首屏。左侧为设计系统导航，顶部支持 `⌘K` / `Ctrl+K` 打开命令面板，
 > 中部按 6 个分类（基础 / 表单 / 反馈 / 数据展示 / HTTP 页面 / 导航）筛选，支持网格与列表两种视图。
 
 ---
@@ -71,21 +71,29 @@ SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走
 
 ## 组件地图
 
+### 排版与容器（6）
+
+`Title`（四级标题）、`Text`（次要 / 弱化 / 加粗 / 代码 / 标记 / 下划线 / 删除线）、`Paragraph`、`Kbd`、`Card`（标题栏 / 内容区 / 页脚）、`Label`。黑白设计语言的核心载体，所有页面元素的统一来源。
+
 ### 基础组件（12）
 
 按钮、输入框、开关、徽标与标签、头像、复选框、下拉框、多行输入、通知条、骨架屏、空状态、HTTP 状态页面。按钮提供主要 / 次要 / 文字三种变体，以及 sm / md / lg 三档尺寸与加载态。
 
-### 浮层组件（6）
+### 浮层组件（8）
 
-Tooltip（纯 CSS 提示）、Dropdown（下拉菜单）、Modal（原生 `dialog.showModal()` 对话框）、Drawer（三向抽屉）、ToastProvider 与 useToast（命令式通知，队列 + 自动消失）。全部不依赖第三方浮层库，Escape / 遮罩可关闭，焦点自动还原。
+Tooltip（纯 CSS 提示）、HoverCard（悬停卡片）、Dropdown（下拉菜单）、Popover（气泡卡片）、Modal（原生 `dialog.showModal()` 对话框）、Drawer（三向抽屉）、ToastProvider 与 useToast（命令式通知，队列 + 自动消失）。全部不依赖第三方浮层库，Escape / 遮罩可关闭，焦点自动还原。
+
+### 选择控件（5）
+
+Segmented（分段控件）、RadioGroup（单选组）、Toggle / ToggleGroup（双态按钮）、Rate（星级评分）。
 
 ### 导航组件（5）
 
 标签页、折叠面板（单开 / 多开）、面包屑、分页（窗口化页码）、步骤条。
 
-### 数据与布局（11）
+### 数据与布局（16）
 
-进度条、滑块、头像组（+N 溢出）、可移除标签、columns 配置式数据表格、统计数值、时间线、描述列表、分隔线、Stack / Container 布局原语。
+进度条、滑块、头像组（+N 溢出）、可移除标签、columns 配置式数据表格（加载态 / 粘性表头 / 行展开）、统计数值、时间线、描述列表、分隔线、Stack / Container / Grid / GridItem 布局原语、Carousel 轮播。
 
 ### 表单场景（7）
 
@@ -208,12 +216,16 @@ import { Button, Input, Switch, Badge, Avatar, HttpStatusPage } from './componen
 
 > 每个组件的完整 props 说明见 **[组件 API 参考](docs/components.md)**。
 
-34 个组件与工具可以独立复用，且**不需要 Lucide 图标库**：
+58 个组件与工具可以独立复用，且**不需要 Lucide 图标库**：
 
+- **排版与容器**：`Title` · `Text` · `Paragraph` · `Kbd` · `Card` · `Label`
 - **基础**：`Button` · `Input` · `Switch` · `Badge` · `Avatar` · `Checkbox` · `Select` · `Textarea` · `Alert` · `Skeleton` · `EmptyState` · `HttpStatusPage`
-- **浮层**：`Tooltip` · `Dropdown` · `Modal` · `Drawer` · `ToastProvider` · `useToast`
+- **浮层**：`Tooltip` · `HoverCard` · `Dropdown` · `Popover` · `Modal` · `Drawer` · `ToastProvider` · `useToast`
+- **选择**：`Segmented` · `RadioGroup` · `Toggle` · `ToggleGroup` · `Rate`
 - **导航**：`Tabs` · `Accordion` · `Breadcrumb` · `Pagination` · `Steps`
-- **数据与布局**：`Progress` · `Slider` · `AvatarGroup` · `Tag` · `Table` · `Statistic` · `Timeline` · `Descriptions` · `Divider` · `Stack` · `Container`
+- **数据与布局**：`Progress` · `Slider` · `AvatarGroup` · `Tag` · `Table` · `Statistic` · `Timeline` · `Descriptions` · `Divider` · `Stack` · `Container` · `Grid` · `GridItem` · `Carousel`
+- **表单与命令**：`useForm` · `FormItem` · `Command` · `Calendar` · `DatePicker`
+- **配置**：`ConfigProvider` · `useSkyUIConfig` · `Spin`
 
 需要完整场景时：
 

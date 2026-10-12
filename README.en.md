@@ -11,7 +11,7 @@ Copy the source — no npm package, no icon library, zero component dependencies
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](LICENSE)
 
-**46** components & scenarios · **34** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
+**61** components & scenarios · **58** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
 
 [README (中文)](README.md) · [Component API](docs/components.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
 
@@ -23,11 +23,15 @@ Copy the source — no npm package, no icon library, zero component dependencies
 
 SkyUI is not an installable package — it is a **copy-paste design language**. You take two files (`ui.tsx` + `ui.css`) into your React project and own the code.
 
-- 34 reusable components & utilities (zero icon dependency):
+- 58 reusable components & utilities (zero icon dependency):
+  - **Typography & containers (6):** `Title`, `Text`, `Paragraph`, `Kbd`, `Card`, `Label`
   - **Base (12):** `Button`, `Input`, `Switch`, `Badge`, `Avatar`, `Checkbox`, `Select`, `Textarea`, `Alert`, `Skeleton`, `EmptyState`, `HttpStatusPage`
-  - **Overlays (6):** `Tooltip`, `Dropdown`, `Modal`, `Drawer`, `ToastProvider`, `useToast`
+  - **Overlays (8):** `Tooltip`, `HoverCard`, `Dropdown`, `Popover`, `Modal`, `Drawer`, `ToastProvider`, `useToast`
+  - **Selection (5):** `Segmented`, `RadioGroup`, `Toggle`, `ToggleGroup`, `Rate`
   - **Navigation (5):** `Tabs`, `Accordion`, `Breadcrumb`, `Pagination`, `Steps`
-  - **Data & layout (11):** `Progress`, `Slider`, `AvatarGroup`, `Tag`, `Table`, `Statistic`, `Timeline`, `Descriptions`, `Divider`, `Stack`, `Container`
+  - **Data & layout (14):** `Progress`, `Slider`, `AvatarGroup`, `Tag`, `Table`, `Statistic`, `Timeline`, `Descriptions`, `Divider`, `Stack`, `Container`, `Grid`, `GridItem`, `Carousel`
+  - **Forms & commands (5):** `useForm`, `FormItem`, `Command`, `Calendar`, `DatePicker`
+  - **Config (3):** `ConfigProvider`, `useSkyUIConfig`, `Spin`
 - Optional full scenarios: form validation, multi-step form, file upload, data table, skeleton states, breadcrumbs
 - 18 HTTP status pages (200 → 504), including a 429 with retry countdown
 - Light/dark theme via a single CSS class; all visuals drawn in CSS, zero image assets
