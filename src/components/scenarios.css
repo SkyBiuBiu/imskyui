@@ -1,0 +1,64 @@
+.skyui-scenario { width: 100%; color: var(--skyui-ink); font-size: 12px; }
+.skyui-demo-form { display: flex; flex-direction: column; gap: 15px; }
+.skyui-demo-note { display: block; color: var(--skyui-muted); font-size: 10px; line-height: 1.7; }
+.skyui-field-error { color: var(--skyui-ink); font-size: 11px; }
+.skyui-action-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.skyui-http-demo { display: flex; flex-direction: column; gap: 12px; }
+.skyui-http-demo > .skyui-demo-note { border-top: 1px solid var(--skyui-line); padding-top: 10px; }
+.skyui-http-result { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 20px; min-height: 270px; }
+.skyui-steps { display: flex; gap: 8px; padding: 0; margin: 0 0 6px; list-style: none; }
+.skyui-steps li { display: flex; align-items: center; gap: 5px; color: var(--skyui-muted); font-size: 10px; }
+.skyui-steps span { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--skyui-line); border-radius: 50%; }
+.skyui-steps .is-current { color: var(--skyui-ink); }
+.skyui-steps .is-current span { background: var(--skyui-ink); color: var(--skyui-paper); border-color: var(--skyui-ink); }
+.skyui-review { display: flex; flex-direction: column; gap: 16px; padding: 16px; background: var(--skyui-subtle); border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); }
+.skyui-review span { display: flex; flex-direction: column; gap: 6px; color: var(--skyui-muted); font-size: 11px; }
+.skyui-review strong { color: var(--skyui-ink); font-size: 13px; overflow-wrap: anywhere; }
+.skyui-setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.skyui-setting-row strong { font-weight: 500; }
+.skyui-setting-row small { display: block; font-size: 10px; color: var(--skyui-muted); margin-top: 5px; }
+.skyui-radio-group { display: flex; flex-wrap: wrap; gap: 16px; margin: 0; padding: 12px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); }
+.skyui-radio-group legend { padding: 0 5px; font-size: 11px; }
+.skyui-radio-group label { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.skyui-radio-group input { accent-color: var(--skyui-ink); }
+.skyui-dropzone { display: flex; flex-direction: column; align-items: center; gap: 12px; border: 1px dashed var(--skyui-muted); border-radius: var(--skyui-radius); padding: 25px 12px; text-align: center; background: var(--skyui-subtle); }
+.skyui-dropzone.is-dragging { border-style: solid; background: var(--skyui-paper); }
+.skyui-dropzone p, .skyui-dropzone small { font-size: 10px; color: var(--skyui-muted); }
+.skyui-upload-symbol { font-family: Georgia, serif; font-size: 30px; line-height: 1; }
+.skyui-file-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); }
+.skyui-file-row > span { min-width: 0; }
+.skyui-file-row strong { display: block; max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+.skyui-file-row small { display: block; font-size: 10px; color: var(--skyui-muted); margin-top: 5px; }
+.skyui-state-controls { display: flex; flex-wrap: wrap; gap: 4px; }
+.skyui-state-controls button { flex: 1; min-height: 32px; padding: 7px; border: 1px solid var(--skyui-line); border-radius: 4px; background: var(--skyui-paper); color: var(--skyui-muted); font-size: 10px; cursor: pointer; }
+.skyui-state-controls button[aria-pressed="true"] { background: var(--skyui-ink); color: var(--skyui-paper); border-color: var(--skyui-ink); }
+.skyui-state-preview { display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: 16px; min-height: 193px; }
+.skyui-state-preview > .skyui-button { align-self: flex-start; }
+.skyui-loading-preview { display: grid; grid-template-columns: 42px 1fr; align-items: center; gap: 15px; }
+.skyui-loading-preview .skyui-skeleton-avatar { width: 42px; height: 42px; border-radius: 50%; }
+.skyui-loading-preview > div { display: flex; flex-direction: column; gap: 10px; }
+.skyui-loading-preview > .skyui-demo-note { grid-column: 1 / -1; }
+.skyui-state-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--skyui-line); padding-top: 16px; font-size: 11px; }
+.skyui-table-wrap { overflow-x: auto; }
+.skyui-table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+.skyui-table caption { text-align: left; font-size: 10px; color: var(--skyui-muted); padding-bottom: 12px; }
+.skyui-table th { font-size: 10px; color: var(--skyui-muted); font-weight: 500; }
+.skyui-table th button { padding: 0; border: 0; font: inherit; background: transparent; color: inherit; cursor: pointer; }
+.skyui-table td, .skyui-table th { padding: 11px 5px; border-bottom: 1px solid var(--skyui-line); }
+.skyui-table td { font-size: 10px; }
+.skyui-table td strong { display: block; font-size: 11px; font-weight: 500; }
+.skyui-table td small { display: block; font-size: 9px; color: var(--skyui-muted); margin-top: 5px; }
+.skyui-table .skyui-badge { font-size: 9px; padding: 4px 5px; }
+.skyui-pagination { display: flex; justify-content: center; align-items: center; gap: 10px; }
+.skyui-pagination > span { color: var(--skyui-muted); font-size: 10px; }
+.skyui-pagination > button:not(.skyui-button) { min-width: 34px; min-height: 34px; padding: 8px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); color: var(--skyui-muted); font: inherit; cursor: pointer; }
+.skyui-pagination > button[aria-current="page"] { background: var(--skyui-ink); color: var(--skyui-paper); border-color: var(--skyui-ink); }
+.skyui-breadcrumb { display: block; margin: 0; }
+.skyui-breadcrumb ol { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.skyui-breadcrumb li { display: flex; align-items: center; gap: 7px; color: var(--skyui-muted); font-size: 10px; }
+.skyui-breadcrumb button { padding: 4px 0; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.skyui-breadcrumb button[aria-current="page"] { color: var(--skyui-ink); }
+.skyui-navigation-preview { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; min-height: 150px; padding: 22px; background: var(--skyui-subtle); border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); }
+.skyui-navigation-preview h4 { margin: 0; font-size: 18px; font-weight: 500; }
+.skyui-navigation-preview p { margin: 0; color: var(--skyui-muted); font-size: 11px; }
+.skyui-scenario button:focus-visible, .skyui-scenario input:focus-visible { outline: 2px solid var(--skyui-muted); outline-offset: 3px; }

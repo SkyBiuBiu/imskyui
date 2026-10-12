@@ -1,0 +1,77 @@
+:root, .skyui-theme-light {
+  --skyui-ink: #202020;
+  --skyui-paper: #fff;
+  --skyui-subtle: #f7f7f7;
+  --skyui-line: #e8e8e8;
+  --skyui-muted: #858585;
+  --skyui-radius: 6px;
+}
+.skyui-theme-dark, .dark {
+  color-scheme: dark;
+  --skyui-ink: #f0f0f0;
+  --skyui-paper: #1b1b1b;
+  --skyui-subtle: #2a2a2a;
+  --skyui-line: #393939;
+  --skyui-muted: #aaa;
+}
+.skyui-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 14px; min-height: 35px; border: 1px solid transparent; border-radius: var(--skyui-radius); font: inherit; font-size: 12px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: transform .18s, background .18s, opacity .18s; }
+.skyui-button:hover:not(:disabled) { opacity: .8; transform: translateY(-1px); }
+.skyui-button:active:not(:disabled) { transform: translateY(0); }
+.skyui-button-primary { background: var(--skyui-ink); color: var(--skyui-paper); }
+.skyui-button-secondary { background: var(--skyui-paper); color: var(--skyui-ink); border-color: var(--skyui-line); }
+.skyui-button-ghost { background: transparent; color: var(--skyui-ink); }
+.skyui-button:disabled { background: var(--skyui-subtle); color: var(--skyui-muted); cursor: not-allowed; }
+.skyui-button:focus-visible, .skyui-input:focus-visible, .skyui-switch:focus-visible { outline: 2px solid var(--skyui-muted); outline-offset: 3px; }
+.skyui-input { width: 100%; min-width: 0; height: 38px; padding: 0 12px; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); background: var(--skyui-paper); color: var(--skyui-ink); font: inherit; font-size: 12px; }
+.skyui-input::placeholder { color: var(--skyui-muted); }
+.skyui-input-label { display: flex; flex-direction: column; gap: 8px; color: var(--skyui-ink); font-size: 12px; }
+.skyui-input-label small { color: var(--skyui-muted); font-size: 11px; }
+.skyui-input-invalid { border-style: dashed; border-color: var(--skyui-ink); }
+.skyui-switch { display: inline-flex; align-items: center; width: 33px; height: 19px; padding: 3px; border: 0; border-radius: 20px; background: var(--skyui-line); cursor: pointer; }
+.skyui-switch span { width: 13px; height: 13px; border-radius: 50%; background: var(--skyui-paper); transition: transform .2s; box-shadow: 0 1px 2px #20202015; }
+.skyui-switch-on { background: var(--skyui-ink); }
+.skyui-switch-on span { transform: translateX(14px); }
+.skyui-switch:disabled { opacity: .4; cursor: not-allowed; }
+.skyui-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; border-radius: 4px; border: 1px solid transparent; font-size: 10px; line-height: 1.2; white-space: nowrap; }
+.skyui-badge-light { background: var(--skyui-subtle); color: var(--skyui-ink); }
+.skyui-badge-dark { background: var(--skyui-ink); color: var(--skyui-paper); }
+.skyui-badge-outline { background: transparent; border-color: var(--skyui-line); color: var(--skyui-muted); }
+.skyui-avatar { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; width: 31px; height: 31px; border-radius: 50%; font-family: Georgia, serif; font-size: 15px; font-style: italic; }
+.skyui-avatar-dark { background: var(--skyui-ink); color: var(--skyui-paper); }
+.skyui-avatar-light { background: var(--skyui-subtle); color: var(--skyui-ink); border: 1px solid var(--skyui-line); }
+.skyui-avatar-large { width: 43px; height: 43px; font-size: 23px; }
+.skyui-checkbox { display: inline-flex; align-items: center; gap: 8px; color: var(--skyui-ink); font-size: 12px; line-height: 1.6; cursor: pointer; }
+.skyui-checkbox input { width: 15px; height: 15px; accent-color: var(--skyui-ink); }
+.skyui-checkbox:has(input:disabled) { opacity: .5; cursor: not-allowed; }
+.skyui-select { padding-right: 25px; cursor: pointer; }
+.skyui-textarea { height: auto; min-height: 85px; padding: 10px 12px; resize: vertical; line-height: 1.6; }
+.skyui-select:focus-visible, .skyui-textarea:focus-visible, .skyui-checkbox input:focus-visible { outline: 2px solid var(--skyui-muted); outline-offset: 3px; }
+.skyui-alert { display: flex; align-items: flex-start; gap: 10px; width: 100%; border: 1px solid var(--skyui-line); border-radius: var(--skyui-radius); padding: 12px; background: var(--skyui-subtle); color: var(--skyui-ink); font-size: 12px; }
+.skyui-alert-symbol { display: grid; place-items: center; flex-shrink: 0; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 11px; }
+.skyui-alert strong { display: block; font-weight: 600; line-height: 1.6; }
+.skyui-alert-description { color: var(--skyui-muted); font-size: 11px; line-height: 1.7; margin-top: 3px; }
+.skyui-alert-error { border-color: var(--skyui-ink); border-style: dashed; }
+.skyui-alert-warning { border-left: 3px solid var(--skyui-ink); }
+.skyui-alert-success .skyui-alert-symbol { background: var(--skyui-ink); color: var(--skyui-paper); }
+.skyui-skeleton { display: block; width: 100%; height: 12px; border-radius: 4px; background: var(--skyui-line); animation: skyui-pulse 1.8s ease-in-out infinite; }
+.skyui-empty-state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 22px 12px; color: var(--skyui-ink); text-align: center; }
+.skyui-empty-symbol { display: grid; place-items: center; width: 47px; height: 47px; border: 1px dashed var(--skyui-muted); border-radius: 50%; transform: rotate(-12deg); }
+.skyui-empty-symbol span { width: 16px; height: 20px; border: 1px solid var(--skyui-ink); border-radius: 2px; }
+.skyui-empty-state h4 { margin: 0; font-size: 14px; }
+.skyui-empty-state p { margin: 0; max-width: 250px; color: var(--skyui-muted); font-size: 12px; line-height: 1.8; }
+.skyui-http-page { position: relative; isolation: isolate; width: 100%; overflow: hidden; padding: 20px 16px; color: var(--skyui-ink); background: var(--skyui-paper); text-align: left; }
+.skyui-http-label { font-size: 9px; color: var(--skyui-muted); letter-spacing: 1px; }
+.skyui-http-code { display: block; margin: 22px 0 12px; font-family: Georgia, serif; font-size: clamp(58px, 6vw, 86px); line-height: 1; font-weight: 400; letter-spacing: -5px; }
+.skyui-http-page h4 { margin: 0; font-size: 15px; font-weight: 600; }
+.skyui-http-page p { margin: 9px 0 0; max-width: 270px; min-height: 40px; font-size: 11px; line-height: 1.8; color: var(--skyui-muted); }
+.skyui-http-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 17px; }
+.skyui-http-art { position: absolute; top: 52px; right: 13px; width: 80px; height: 80px; z-index: -1; opacity: .18; }
+.skyui-http-art span { position: absolute; inset: 0; border: 1px solid var(--skyui-ink); border-radius: 50%; }
+.skyui-http-art span:nth-child(2) { transform: translateX(15px); }
+.skyui-http-art span:nth-child(3) { transform: translateY(15px); }
+.skyui-http-4xx .skyui-http-art span { border-radius: 3px; transform: rotate(15deg); }
+.skyui-http-4xx .skyui-http-art span:nth-child(2) { transform: rotate(30deg); }
+.skyui-http-4xx .skyui-http-art span:nth-child(3) { transform: rotate(45deg); }
+.skyui-http-5xx .skyui-http-art { background: repeating-linear-gradient(135deg, var(--skyui-ink) 0 1px, transparent 1px 7px); border-radius: 50%; }
+@keyframes skyui-pulse { 50% { opacity: .4; } }
+@media (prefers-reduced-motion: reduce) { .skyui-button, .skyui-switch span { transition: none; } .skyui-skeleton { animation: none; } }
