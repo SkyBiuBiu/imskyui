@@ -1,96 +1,115 @@
-# GitHub About 配置清单
+# GitHub About 配置记录
 
 仓库：`SkyBiuBiu/imskyui`
-填写入口：https://github.com/SkyBiuBiu/imskyui （页面右侧 **About** → 右侧齿轮图标）
+状态：**已通过 API 写入**（2026-10-12）
 
-当前状态：Description 空 · Website 空 · Topics 空 · 可见性 Public
+填写入口：https://github.com/SkyBiuBiu/imskyui （About 右侧齿轮图标可随时修改）
 
----
+当前状态：
 
-## 1. Description（上限 350 字符，建议 120 以内）
-
-填入这一行：
-
-```
-纯黑白 UI 组件库与交互式展示站 · 37 个组件与场景 · 18 种 HTTP 状态页面 · React 19 + TypeScript · 下载源码即用，零组件依赖
-```
-
-英文版（如果想让更多人搜到）：
-
-```
-Monochrome UI component library & showcase — 37 components, 18 HTTP status pages. Copy the source, zero npm dependencies.
-```
-
-> GitHub 的搜索索引对英文关键词更友好，Description 只影响仓库列表和搜索结果权重，不影响页面内容。README 主体已是中文，Description 用英文覆盖面更广，中文版本留给你自己选。
+| 字段 | 状态 |
+| --- | --- |
+| Description | ✅ 已填，121 字符（上限 350） |
+| Topics | ✅ 已填 12 个（上限 20） |
+| Website | ⬜ 有意留空，原因见下|
+| Social preview | ⬜ 未设置，可选 |
 
 ---
 
-## 2. Topics（上限 20 个，建议 8-12 个）
+## 1. Description ✅
 
-逐个点 **Add topic** 添加：
+实际写入的内容（中英双语，兼顾中文读者与英文搜索流量）：
 
 ```
-react
-typescript
-ui-components
-design-system
-component-library
-tanstack
-vite
-tailwindcss
-monochrome
-dark-mode
-http-status-pages
-frontend
+纯黑白 UI 组件库与交互式展示站 · 37 个组件与场景 · 18 种 HTTP 状态页面 · Monochrome UI library for React, copy the source, zero npm dependencies.
 ```
 
-说明：
+设计思路：前半段中文保证项目调性一致，后半段塞入 `Monochrome UI library`、`React`、`copy the source`、`zero npm dependencies` 等英文检索词 —— GitHub 的搜索索引对英文更友好，能覆盖更大的检索面。
+
+如需改为纯中文或纯英文，用上面命令重新 PATCH 即可。
+
+## 2. Topics ✅ 12 个
+
+```
+component-library · dark-mode · design-system · frontend
+http-status-pages · monochrome · react · tailwindcss
+tanstack · typescript · ui-components · vite
+```
 
 | Topic | 为什么加 |
 | --- | --- |
-| `react` `typescript` `vite` `tailwindcss` | 主要技术栈，进对应技术标签的检索池 |
-| `ui-components` `design-system` `component-library` | 核心品类词，命中最多 |
+| `react` `typescript` `vite` `tailwindcss` | 主要技术栈，进对应技术标签检索池 |
+| `ui-components` `design-system` `component-library` | 核心品类词，命中量最大 |
 | `monochrome` `dark-mode` | 本项目最突出的设计特征，差异化标签 |
 | `http-status-pages` | 少见的细分标签，竞争小，容易被搜到 |
 | `tanstack` | 框架相关，蹭生态流量 |
+| `frontend` | 宽泛分类，带来基础曝光 |
 
-> Topics 会显示在仓库页右侧，并参与 GitHub 主题聚合页。`monochrome` 和 `http-status-pages` 这类词竞争小，是拿曝光的好入口，值得占坑。
+> `monochrome` 和 `http-status-pages` 属于低竞争占坑词 —— 这类标签下同类项目少，
+> 被搜到的概率远高于 `react` 这种红海标签。值得占。
 
----
+## 3. Website ⬜ 有意留空
 
-## 3. Website（可留空）
+`.netlify/state.json` 里只有本地 dev 的 postgres 连接串，没有线上 site ID。
+**没有猜测 URL 填进去** —— 填错的链接比空着更糟。
 
-我不知道线上部署地址 —— `.netlify/state.json` 里只有本地 dev 的数据库连接串，没有线上 site ID，所以这里**不填**，也不给你一个猜出来的 URL。
+拿到地址后填：Netlify 后台 → 该站点 → Overview，复制形如
+`https://xxx-yyy-123.netlify.app` 的地址（注意不是 `xxx.netlify.app`）。
 
-拿到地址后填：Netlify 后台 → 该站点 → Overview，复制形如 `https://xxx-yyy-123.netlify.app` 的地址。
+## 4. Social preview（可选）
 
-留空也不影响，Website 只是展示用的外链。
+仓库未设置，1280×640。不影响任何功能，只影响 PR / commit 等场景的分享大图。
 
----
-
-## 可选：Social preview 图
-
-仓库未设置。About 右侧的社交预览图会显示在 PR、commit 等场景，1280×640。
-
-目前已有现成素材：`docs/images/01-gallery-light.png` 是 1400×875，比例接近，可以用它生成：
+现成素材：`docs/images/01-gallery-light.png` 是 1400×875，比例接近，可裁一版：
 
 ```bash
-# 需要 ImageMagick 或 ffmpeg 任一
 ffmpeg -i docs/images/01-gallery-light.png -vf "scale=1280:-1,crop=1280:640" social-preview.png
 ```
 
-不上传预览图不影响任何功能，只是分享出去时没有大图。
+---
+
+## 补充：仓库仍缺 LICENSE
+
+仓库根目录**没有 LICENSE 文件**，README 里也没有许可声明。
+这对组件库类项目影响实际 —— 别人想复用你的组件时，没有许可声明会犹豫。
+
+需要你确认用哪个，确认后我可以直接把文件写好并提交：
+
+- **MIT** —— 最宽松，允许商用和闭源分发，组件库最常见选择
+- **Apache-2.0** —— MIT 基础上多了明确的专利授权条款
+- 保持现状（不加）—— 别人只能看，不能合法复用
 
 ---
 
-## 补充：仓库还缺一个 LICENSE
+## 附：本次写入用到的命令
 
-仓库根目录**没有 LICENSE 文件**，README 里也没有许可声明。这不影响 About 展示，但如果别人想复用这套组件，没有许可声明会让人犹豫。
+```bash
+# 取 GCM 凭据（与 git push 同一套，40 位 token）
+cred=$(printf 'protocol=https\nhost=github.com\n\n' | git credential fill 2>/dev/null)
+pw=$(echo "$cred" | grep '^password=' | cut -d= -f2-)
 
-如果要加，需要你先选一个：
+# 1) 改 description ——注意：PATCH repo 里带 topics 会被 GitHub 静默忽略
+curl -s -X PATCH \
+  -H "Authorization: Bearer $pw" \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  -H "Content-Type: application/json" \
+  https://api.github.com/repos/SkyBiuBiu/imskyui \
+  -d '{"description":"..."}'
 
-- **MIT** —— 最宽松，允许商用和闭源分发
-- **Apache-2.0** —— MIT 基础上多了明确的专利授权条款
-- 声明保留所有权利（不加 LICENSE 文件）—— 别人只能看，不能合法复用
+# 2) 改 topics —— 必须用独立的 topics 接口，且是 PUT 不是 PATCH
+curl -s -X PUT \
+  -H "Authorization: Bearer $pw" \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  -H "Content-Type: application/json" \
+  https://api.github.com/repos/SkyBiuBiu/imskyui/topics \
+  -d '{"names":["react","typescript"]}'
 
-组件库这类项目通常选 MIT。确认后我可以直接把 LICENSE 文件写好并提交。
+# 3) 匿名复核（不带 token，确认真的落库了）
+curl -s https://api.github.com/repos/SkyBiuBiu/imskyui
+```
+
+**关键坑**：`PATCH /repos/{owner}/{repo}` 里同时带 `topics` 字段，接口返回 200 且
+description 正常写入，但 `topics` 会被**静默忽略**（返回值仍是 0 个）。
+必须单独调 `PUT /repos/{owner}/{repo}/topics`。
