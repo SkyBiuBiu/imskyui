@@ -24,6 +24,16 @@
 
 源码通过 Vite `?raw` 导入，使下载内容与实际基础组件和场景组件始终一致。基础组件需下载 ui.tsx 和 ui.css；完整场景需再下载 scenarios.tsx 和 scenarios.css，四个文件放在同一目录。组合卡片的代码片段只是使用参考，不是完整组件实现。画廊总数和分类计数从卡片集合派生，不要写死。
 
+## 以编程方式获取组件源码（供 AI 工具与脚本）
+
+组件源码在仓库内的固定路径：`src/components/`（ui.tsx、ui.css、scenarios.tsx、scenarios.css）。代理工具接入本库时不要依赖展示站的下载按钮，直接用以下命令或 raw 链接：
+
+```bash
+npx degit SkyBiuBiu/imskyui/src/components src/components
+```
+
+逐文件下载：`https://raw.githubusercontent.com/SkyBiuBiu/imskyui/main/src/components/<file>`（把 `main` 换成 release tag 可锁定版本）。每个组件的 props 签名见 `docs/components.md`，与源码保持同步；修改组件后必须同步更新该文档和两份 README 的接入说明。许可证为 MIT（见 LICENSE）。
+
 对话框使用原生 `dialog.showModal()`，提供焦点限制、Escape 关闭与关闭后焦点还原。使用 CSS 绘制视觉资产，无需图像服务。尊重 `prefers-reduced-motion`。
 
 不要手动编辑生成的 `routeTree.gen.ts`。不要在自动代理任务中启动开发服务或运行构建、类型检查、测试；部署流水线负责验证。

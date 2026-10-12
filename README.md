@@ -12,10 +12,11 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-202020?style=flat-square&logo=typescript&logoColor=202020)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-7-202020?style=flat-square&logo=vite&logoColor=202020)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-202020?style=flat-square&logo=tailwindcss&logoColor=202020)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](#许可证)
 
 **37** 个组件与场景 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
 
-[快速开始](#这是什么) · [组件地图](#组件地图) · [HTTP 页面](#http-状态页面) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
+[快速开始](#这是什么) · [组件 API](docs/components.md) · [English](README.en.md) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
 
 </div>
 
@@ -142,14 +143,44 @@ SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走
 
 ## 接入你的项目
 
-不需要安装任何组件依赖，只要 React 和一份样式文件。
+不需要安装任何组件依赖，只要 **React 18+**（组件内部使用了 `useId`，演示站运行于 React 19）和一份样式文件，不需要 Lucide 图标库。
 
-### 第 1 步：下载源码
+### 第 1 步：获取源码
+
+源码文件在仓库内的固定位置：`src/components/` 下的 `ui.tsx`、`ui.css`、`scenarios.tsx`、`scenarios.css`。三种获取方式任选其一：
+
+**方式 A：命令行直接拉取（推荐，AI 工具 / 脚本友好）**
+
+```bash
+# 只取 4 个源码文件，不带 git 历史，输出到项目的组件目录
+npx degit SkyBiuBiu/imskyui/src/components src/components
+```
+
+或逐个下载基础组件的两个文件：
+
+```bash
+mkdir -p src/components
+curl -fsSL -o src/components/ui.tsx  https://raw.githubusercontent.com/SkyBiuBiu/imskyui/main/src/components/ui.tsx
+curl -fsSL -o src/components/ui.css  https://raw.githubusercontent.com/SkyBiuBiu/imskyui/main/src/components/ui.css
+```
+
+> `-fsSL`：静默下载，失败时返回非零退出码，方便脚本判断。
+> 锁定版本时，把 URL 中的 `main` 换成对应的 Release tag 即可。
+
+**方式 B：展示站下载**
 
 点击页面右上角的 **开始使用**，下载 `ui.tsx` 和 `ui.css`，放进同一个目录。
 
 ![下载对话框](docs/images/07-download-dialog.png)
 
+**方式 C：克隆整个仓库**
+
+```bash
+git clone https://github.com/SkyBiuBiu/imskyui.git
+# 源码位于 imskyui/src/components/
+```
+
+> 基础组件只需 `ui.tsx` + `ui.css` 两个文件。
 > 需要完整场景（表单、表格、状态、导航）时，再下载 `scenarios.tsx` 和 `scenarios.css`，
 > 四个文件放在同一目录。
 
@@ -160,6 +191,8 @@ import { Button, Input, Switch, Badge, Avatar, HttpStatusPage } from './componen
 
 <Button>开始创作</Button>
 ```
+
+> 每个组件的完整 props 说明见 **[组件 API 参考](docs/components.md)**。
 
 12 个基础组件可以独立复用，且**不需要 Lucide 图标库**：
 
@@ -243,6 +276,12 @@ Netlify 部署配置位于 `netlify.toml`（构建命令 `vite build`，发布�
 - 文件选择**只读取**文件名、大小和类型，不读取文件内容，也不上传。
 - 主题、开关、关注、表单和设置等交互只作用于**当前会话**，不做持久化写入。
 - 项目中没有数据库、用户认证或服务端 API。
+
+---
+
+## 许可证
+
+[MIT](LICENSE) —— 可以自由复制、修改、商用，保留版权声明即可。
 
 ---
 
