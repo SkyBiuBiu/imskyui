@@ -14,7 +14,7 @@ export const httpScenarios = [
   { code: 403, name: 'Forbidden', title: '这扇门，暂时没有权限', description: '服务器拒绝访问这个资源。如有需要，请联系管理员。', action: '查看权限说明', result: '此处可展示所需权限及管理员联系方式。' },
   { code: 404, name: 'Not Found', title: '这一页，留白了', description: '我们没有找到这个页面。也许地址有误，也许它已经搬家。', action: '返回首页', result: '首页入口示例。此处可接入应用的真实首页导航。' },
   { code: 408, name: 'Request Timeout', title: '这次请求，等得有点久', description: '服务器未及时收到完整请求。检查网络连接后重新尝试。', action: '重新尝试', result: '重试完成，内容已恢复（本地演示）。' },
-  { code: 409, name: 'Conflict', title: '内容发生了冲突', description: '请求与资源当前状态冲突。查看最新版本，再决定如何修改。', action: '查看最新版本', result: '最新版本：v1.2。此处可接入版本比较和冲突解决界面。' },
+  { code: 409, name: 'Conflict', title: '内容发生了冲突', description: '请求与资源当前状态冲突。查看最新版本，再决定如何修改。', action: '查看最新版本', result: '最新版本：v1.3。此处可接入版本比较和冲突解决界面。' },
   { code: 410, name: 'Gone', title: '这段内容，已告别', description: '资源已被永久移除。回到列表，发现其他值得留下的内容。', action: '浏览其他内容', result: '此处可展示替代资源或返回内容列表。' },
   { code: 422, name: 'Unprocessable Content', title: '还有一些内容需要完善', description: '请求内容无法按当前规则处理。根据字段提示修改后再提交。', action: '查看字段提示', result: '字段提示示例：项目名称不能为空，说明至少需要 10 个字符。' },
   { code: 429, name: 'Too Many Requests', title: '慢一点，也很好', description: '请求过于频繁。等待片刻再试，让服务有时间响应。', action: '重新尝试', result: '重试成功（本地演示）。实际等待时间应以服务器提示为准。' },

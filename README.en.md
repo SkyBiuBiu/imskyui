@@ -36,6 +36,19 @@ SkyUI is not an installable package — it is a **copy-paste design language**. 
 - 18 HTTP status pages (200 → 504), including a 429 with retry countdown
 - Light/dark theme via a single CSS class; all visuals drawn in CSS, zero image assets
 
+## The 61-card gallery
+
+The showcase gallery is organized into 6 categories — **61 cards** in total, with keyword search and grid / list views:
+
+| Category | Cards | Contents |
+| --- | --- | --- |
+| **Base** | 15 | Buttons, Tabs, Badges, Accordion, Tooltip, Dropdown, Divider, Typography, Card, Segmented, Toggle, Popover, HoverCard, Grid, ConfigProvider |
+| **Forms** | 11 | Inputs, selection controls, progress & slider, contact form, multi-step form, settings, file upload, RadioGroup, Rate, Calendar, DatePicker |
+| **Feedback** | 6 | Notifications & Toast, dialog, drawer, data states, Spin, command palette |
+| **Data display** | 9 | Profile card, data overview, avatars, data table, mini table, statistic, timeline, descriptions, carousel |
+| **Navigation** | 2 | Breadcrumb & pagination, steps |
+| **HTTP pages** | 18 | Every status code from 200 to 504 |
+
 ## Requirements
 
 - **React 18+** only (uses `useId`; the showcase site runs on React 19). No Lucide, no other runtime dependencies.

@@ -6,3 +6,4 @@ dist
 
 # Generated route tree
 src/routeTree.gen.ts
+.playwright-cli/
