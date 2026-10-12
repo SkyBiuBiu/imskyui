@@ -7,6 +7,10 @@
 A monochrome (black & white) UI component library and interactive showcase for React.
 Copy the source — no npm package, no icon library, zero component dependencies.
 
+[![Release](https://img.shields.io/github/v/release/SkyBiuBiu/imskyui?style=flat-square&labelColor=202020)](https://github.com/SkyBiuBiu/imskyui/releases)
+[![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](LICENSE)
+
 **46** components & scenarios · **34** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
 
 [README (中文)](README.md) · [Component API](docs/components.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
@@ -21,7 +25,7 @@ SkyUI is not an installable package — it is a **copy-paste design language**. 
 
 - 34 reusable components & utilities (zero icon dependency):
   - **Base (12):** `Button`, `Input`, `Switch`, `Badge`, `Avatar`, `Checkbox`, `Select`, `Textarea`, `Alert`, `Skeleton`, `EmptyState`, `HttpStatusPage`
-  - **Overlays (5):** `Tooltip`, `Dropdown`, `Modal`, `Drawer`, `ToastProvider` / `useToast`
+  - **Overlays (6):** `Tooltip`, `Dropdown`, `Modal`, `Drawer`, `ToastProvider`, `useToast`
   - **Navigation (5):** `Tabs`, `Accordion`, `Breadcrumb`, `Pagination`, `Steps`
   - **Data & layout (11):** `Progress`, `Slider`, `AvatarGroup`, `Tag`, `Table`, `Statistic`, `Timeline`, `Descriptions`, `Divider`, `Stack`, `Container`
 - Optional full scenarios: form validation, multi-step form, file upload, data table, skeleton states, breadcrumbs
@@ -77,6 +81,15 @@ Requires **Node.js 22+** and **pnpm**.
 pnpm install
 pnpm dev   # http://localhost:3000
 ```
+
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the Vite dev server (port 3000) |
+| `pnpm typecheck` | TypeScript type checking |
+| `pnpm test` | vitest unit tests |
+| `pnpm build` | Production build (generates `routeTree.gen.ts`, which typecheck depends on) |
+
+CI runs build → typecheck → tests on every push and PR. The build outputs `dist/client` (client) and `dist/server` (SSR) — platform-neutral, deployable to Vercel, Cloudflare, Netlify, or your own Node server.
 
 ## License
 

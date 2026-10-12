@@ -12,6 +12,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-202020?style=flat-square&logo=typescript&logoColor=202020)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-7-202020?style=flat-square&logo=vite&logoColor=202020)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-202020?style=flat-square&logo=tailwindcss&logoColor=202020)](https://tailwindcss.com)
+[![Release](https://img.shields.io/github/v/release/SkyBiuBiu/imskyui?style=flat-square&labelColor=202020)](https://github.com/SkyBiuBiu/imskyui/releases)
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](#许可证)
 
@@ -74,9 +75,9 @@ SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走
 
 按钮、输入框、开关、徽标与标签、头像、复选框、下拉框、多行输入、通知条、骨架屏、空状态、HTTP 状态页面。按钮提供主要 / 次要 / 文字三种变体，以及 sm / md / lg 三档尺寸与加载态。
 
-### 浮层组件（5）
+### 浮层组件（6）
 
-Tooltip（纯 CSS 提示）、Dropdown（下拉菜单）、Modal（原生 `dialog.showModal()` 对话框）、Drawer（三向抽屉）、Toast（命令式通知，队列 + 自动消失）。全部不依赖第三方浮层库，Escape / 遮罩可关闭，焦点自动还原。
+Tooltip（纯 CSS 提示）、Dropdown（下拉菜单）、Modal（原生 `dialog.showModal()` 对话框）、Drawer（三向抽屉）、ToastProvider 与 useToast（命令式通知，队列 + 自动消失）。全部不依赖第三方浮层库，Escape / 遮罩可关闭，焦点自动还原。
 
 ### 导航组件（5）
 
@@ -210,7 +211,7 @@ import { Button, Input, Switch, Badge, Avatar, HttpStatusPage } from './componen
 34 个组件与工具可以独立复用，且**不需要 Lucide 图标库**：
 
 - **基础**：`Button` · `Input` · `Switch` · `Badge` · `Avatar` · `Checkbox` · `Select` · `Textarea` · `Alert` · `Skeleton` · `EmptyState` · `HttpStatusPage`
-- **浮层**：`Tooltip` · `Dropdown` · `Modal` · `Drawer` · `ToastProvider` / `useToast`
+- **浮层**：`Tooltip` · `Dropdown` · `Modal` · `Drawer` · `ToastProvider` · `useToast`
 - **导航**：`Tabs` · `Accordion` · `Breadcrumb` · `Pagination` · `Steps`
 - **数据与布局**：`Progress` · `Slider` · `AvatarGroup` · `Tag` · `Table` · `Statistic` · `Timeline` · `Descriptions` · `Divider` · `Stack` · `Container`
 
@@ -279,11 +280,11 @@ pnpm dev
 | `pnpm dev` | 启动 Vite 开发服务器（端口 3000） |
 | `pnpm typecheck` | TypeScript 类型检查 |
 | `pnpm test` | vitest 单元测试 |
-| `pnpm build` | 生产构建，产物输出到 `dist/client` |
+| `pnpm build` | 生产构建（生成 `routeTree.gen.ts`，类型检查依赖它） |
 
-提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。CI 在每次 push 与 PR 时运行类型检查、测试与构建。
+提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。CI 在每次 push 与 PR 时运行构建、类型检查与测试。
 
-`pnpm build` 产物输出到 `dist/client`（客户端）与 `dist/server`（SSR），不绑定任何部署平台 —— Vercel、Cloudflare、Netlify 或自建 Node 服务器均可接入。
+构建产物为 `dist/client`（客户端）与 `dist/server`（SSR），平台中立 —— Vercel、Cloudflare、Netlify 或自建 Node 服务器均可接入。
 
 ---
 
