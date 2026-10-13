@@ -8,11 +8,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
     steps:
       - uses: actions/checkout@v4
 
+      # version 必须显式指定：仓库未在 package.json 中声明 packageManager 字段，
+      # 缺省时 action-setup 会直接报「No pnpm version is specified」
       - uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - uses: actions/setup-node@v4
         with:
@@ -25,7 +28,7 @@ jobs:
       - name: 构建 Workers 产物
         run: pnpm build:workers
 
-      # 变量在 Cloudflare 面板 → Workers & Pages → imskyui → Settings → Variables and Secrets 添加
+      # 账号级密钥存于仓库 Settings → Secrets and variables → Actions
       - name: 部署到 Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
