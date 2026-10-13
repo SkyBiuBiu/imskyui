@@ -315,3 +315,21 @@ pre { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 10px; line-
 @media (max-width: 1000px) { .scenario-shortcuts { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 500px) { .scenario-shortcuts { padding: 14px; gap: 10px; } .scenario-shortcuts > div { grid-column: 1 / -1; padding: 2px; } .scenario-shortcuts > button:last-child { grid-column: 1 / -1; } .category-tabs { justify-content: flex-start; } .category-tabs button { padding: 8px; font-size: 10px; } .scenario-component .card-preview { padding: 22px; } .http-component .card-preview { padding: 14px; } .http-preview-modal .skyui-http-page { padding: 25px; } .http-preview-modal .skyui-http-art { right: 25px; width: 85px; height: 85px; } .http-preview-modal .skyui-http-page h4 { font-size: 20px; } .route-status .skyui-http-page { padding: 28px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* 数据展示组件演示 */
+.chart-demo { width: 100%; }
+.chart-demo .skyui-chart { padding: 4px 0; }
+.sparkline-demo { display: flex; flex-direction: column; gap: 9px; width: 100%; }
+.sparkline-demo > div { display: flex; align-items: center; justify-content: space-between; gap: 14px; font-size: 10px; color: var(--muted); }
+.sparkline-demo > div > span { white-space: nowrap; }
+.gauge-demo { display: flex; align-items: flex-start; gap: 22px; width: 100%; flex-wrap: wrap; }
+.gauge-demo > div { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+.gauge-demo-meters { flex: 1 1 100%; display: flex; flex-direction: column; gap: 11px; padding-top: 4px; }
+.counter-demo { display: flex; align-items: flex-end; gap: 30px; width: 100%; flex-wrap: wrap; }
+.counter-demo > div { display: flex; flex-direction: column; gap: 7px; }
+.counter-demo .skyui-counter { font-size: 27px; letter-spacing: -1px; }
+.counter-demo span { font-size: 10px; }
+.filter-demo { display: flex; flex-direction: column; gap: 13px; width: 100%; }
+.filter-demo .skyui-search { max-width: 260px; }
+.filter-demo-rows { display: flex; flex-direction: column; gap: 9px; padding-top: 3px; }
+.filter-demo-rows > div { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 14px; font-size: 10px; color: var(--muted); }

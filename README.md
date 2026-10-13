@@ -16,7 +16,7 @@
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](#许可证)
 
-**61** 个组件与场景 · **58** 个组件与工具 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
+**61** 个组件与场景 · **66** 个组件与工具 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
 
 [快速开始](#这是什么) · [组件 API](docs/components.md) · [更新日志](CHANGELOG.md) · [English](README.en.md) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
 
@@ -29,7 +29,7 @@
 SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走**的黑白设计语言。
 
 - **拿走即用** —— 点击「开始使用」下载 `ui.tsx` 和 `ui.css` 两个文件，扔进 React 项目就能跑，不需要装任何 npm 包。
-- **不止于控件** —— 58 个组件与工具，覆盖排版、卡片、浮层、导航、表格、日期选择与命令面板，另提供表单校验、分步表单、文件上传、数据表格、骨架屏等完整场景。
+- **不止于控件** —— 66 个组件与工具，覆盖排版、卡片、浮层、导航、表格、日期选择与命令面板，另提供表单校验、分步表单、文件上传、数据表格、骨架屏等完整场景。
 - **覆盖异常路径** —— 18 种 HTTP 状态页面（200 到 504），包含带倒计时重试的 429。
 - **两套主题** —— 浅色与深色通过一个 CSS class 切换，所有组件自动跟随。
 - **零图片资源** —— 所有几何视觉由 CSS 绘制，首屏没有一张外部图片要加载。
@@ -71,7 +71,7 @@ SkyUI 不是一个需要安装的组件库，而是一套**可以直接复制走
 
 ## 组件地图
 
-以下按源码文件 `ui.tsx` 的导出分组，共 **58 个组件与工具**。
+以下按源码文件 `ui.tsx` 的导出分组，共 **66 个组件与工具**。
 
 ### 排版与容器（6）
 
@@ -100,6 +100,12 @@ Segmented（分段控件）、RadioGroup（单选组）、Toggle / ToggleGroup�
 ### 表单与命令（5）
 
 useForm 校验 hook、FormItem 表单项、Command 命令面板、Calendar 月历、DatePicker 日期选择器。
+
+### 图表与指标（8）
+
+Sparkline（表格行内迷你走势，无坐标轴）、LineChart（多序列折线趋势图，网格线 + 虚实图例 + 端点标注）、Gauge（环形仪表，适合占比 / 完成度）、Meter（阈值水位条，在进度条上标出分级刻度）、Counter（数字滚动，尊重 `prefers-reduced-motion`）、ThresholdLegend（阈值分级图例）、SearchInput（带清空的搜索框）、FilterChips（单选分类筛选胶囊）。
+
+全部为手写 SVG / CSS，不引入图表库。数值超量程按比例截断而非溢出；等值序列保留上下留白，不退化成贴边直线。
 
 ### 配置与指示（3）
 
@@ -233,7 +239,7 @@ import { Button, Input, Switch, Badge, Avatar, HttpStatusPage } from './componen
 
 > 每个组件的完整 props 说明见 **[组件 API 参考](docs/components.md)**。
 
-58 个组件与工具可以独立复用，且**不需要 Lucide 图标库**：
+66 个组件与工具可以独立复用，且**不需要 Lucide 图标库**：
 
 - **排版与容器**：`Title` · `Text` · `Paragraph` · `Kbd` · `Card` · `Label`
 - **基础**：`Button` · `Input` · `Switch` · `Badge` · `Avatar` · `Checkbox` · `Select` · `Textarea` · `Alert` · `Skeleton` · `EmptyState` · `HttpStatusPage`
