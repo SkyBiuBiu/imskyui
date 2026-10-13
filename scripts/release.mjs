@@ -31,6 +31,14 @@ const log = (msg) => console.log(msg)
 const step = (n, total, msg) => log(`\n[${n}/${total}] ${msg}`)
 
 /**
+ * Windows 上 pnpm 是 pnpm.cmd shim。Node 20+ 出于安全默认禁止不经 shell 直接
+ * spawn .cmd（会抛 EINVAL/ENOENT），因此只有 pnpm 需要 shell: true。
+ * git 与 gh 是真实 exe，直接传 argv 更安全 —— tag message 里带中文和换行，
+ * 走 shell 会被引号规则破坏。
+ */
+const SHELL_COMMANDS = new Set(['pnpm'])
+
+/**
  * 执行命令。
  * readonly=true 的命令（读分支、读状态、查 tag、gh auth）不产生任何副作用，
  * dry-run 下也照常执行 —— 否则校验逻辑会因为拿不到数据而误判。
@@ -44,6 +52,7 @@ function run(command, commandArgs, { capture = false, readonly = false } = {}) {
   return execFileSync(command, commandArgs, {
     cwd: root,
     encoding: 'utf8',
+    shell: SHELL_COMMANDS.has(command),
     stdio: capture ? ['ignore', 'pipe', 'inherit'] : 'inherit',
   })
 }
@@ -137,7 +146,8 @@ if (existingTag) {
 step(4, TOTAL, `创建 GitHub Release${draft ? '（草稿）' : ''}`)
 const releaseArgs = ['release', 'create', tag, '--title', tag, '--notes-file', '-']
 if (draft) releaseArgs.push('--draft')
-else releaseArgs.push('--generate-notes')
+// 不加 --generate-notes：CHANGELOG 段落已经是精心写过的人写正文，
+// 再自动追加一份 compare 链接列表只会稀释信息量
 
 if (dryRun) {
   log(`   [dry-run] gh ${releaseArgs.join(' ')}`)
