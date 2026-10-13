@@ -1,7 +1,7 @@
 {
   "name": "skyui-design-system",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -9,9 +9,12 @@
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "check:version": "node scripts/check-version.mjs",
     "build:workers": "cross-env DEPLOY_TARGET=cloudflare vite build",
     "deploy:workers": "pnpm build:workers && wrangler deploy",
-    "preview:workers": "pnpm build:workers && wrangler dev"
+    "preview:workers": "pnpm build:workers && wrangler dev",
+    "capture": "node scripts/capture.mjs",
+    "release:check": "pnpm check:version && pnpm typecheck && pnpm test && pnpm build"
   },
   "dependencies": {
     "@tailwindcss/vite": "4.2.2",
@@ -39,6 +42,7 @@
     "cross-env": "^10.1.0",
     "jsdom": "27.0.0",
     "lucide-react": "0.576.0",
+    "playwright": "1.64.0",
     "rimraf": "6.1.3",
     "tailwindcss": "4.2.2",
     "typescript": "5.9.3",
