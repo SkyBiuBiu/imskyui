@@ -7,3 +7,7 @@ dist
 # Generated route tree
 src/routeTree.gen.ts
 .playwright-cli/
+
+# Cloudflare Workers local state
+.wrangler
+.vercel
