@@ -674,3 +674,145 @@ export function ConfigProvider({ theme, size, children, className = '' }: SkyUIC
 export function useSkyUIConfig() {
   return useContext(ConfigContext)
 }
+
+/* ------------------------------------------------------------------ */
+/* 数据展示                                                            */
+/* ------------------------------------------------------------------ */
+
+const fmtNumber = (value: number, decimals = 0) => value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+
+/* 迷你趋势线：表格行内嵌走势，无坐标轴无交互 */
+export function Sparkline({ data, width = 72, height = 20, className = '', label }: { data: number[]; width?: number; height?: number; className?: string; label?: string }) {
+  if (data.length < 2) return <span className={`skyui-sparkline-empty ${className}`} aria-hidden="true">—</span>
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const span = max - min || 1
+  const pad = 2
+  const points = data.map((value, index) => {
+    const x = pad + (index / (data.length - 1)) * (width - pad * 2)
+    const y = height - pad - ((value - min) / span) * (height - pad * 2)
+    return `${x.toFixed(1)},${y.toFixed(1)}`
+  }).join(' ')
+  const last = points.split(' ').pop()!.split(',')
+  return <svg className={`skyui-sparkline ${className}`} width={width} height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label || `趋势，最新值 ${fmtNumber(data[data.length - 1])}`} preserveAspectRatio="none">
+    <polyline points={points} fill="none" stroke="var(--skyui-ink)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx={last[0]} cy={last[1]} r="2" fill="var(--skyui-ink)" />
+  </svg>
+}
+
+/* 折线趋势图：多序列 + 网格线 + 端点标注，用于周期增长回看 */
+type LineChartSeries = { name: string; data: number[]; dashed?: boolean }
+
+export function LineChart({ series, labels, height = 180, decimals = 0, className = '', ariaLabel = '增长趋势图', showGrid = true }: { series: LineChartSeries[]; labels?: string[]; height?: number; decimals?: number; className?: string; ariaLabel?: string; showGrid?: boolean }) {
+  const width = 620
+  const padL = 52
+  const padR = 18
+  const padT = 14
+  const padB = 26
+  const all = series.flatMap(item => item.data)
+  if (!all.length) return <div className={`skyui-chart-empty ${className}`}>暂无数据</div>
+  const rawMin = Math.min(...all)
+  const rawMax = Math.max(...all)
+  // 值域贴住数据范围，但至少留出一格间距，避免单值系列退化成一条贴边直线
+  const span = rawMax - rawMin
+  const pad = span === 0 ? Math.abs(rawMax) * 0.1 || 1 : span * 0.12
+  const min = rawMin - pad
+  const max = rawMax + pad
+  const plotW = width - padL - padR
+  const plotH = height - padT - padB
+  const longest = Math.max(...series.map(item => item.data.length))
+  const xAt = (index: number) => padL + (longest === 1 ? plotW / 2 : (index / (longest - 1)) * plotW)
+  const yAt = (value: number) => padT + plotH - ((value - min) / (max - min)) * plotH
+  const ticks = [max, (max + min) / 2, min]
+  return <figure className={`skyui-chart ${className}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={ariaLabel} style={{ width: '100%', height, display: 'block' }}>
+      {showGrid && ticks.map((tick, index) => <g key={index}>
+        <line x1={padL} y1={yAt(tick)} x2={width - padR} y2={yAt(tick)} stroke="var(--skyui-line)" strokeWidth="1" />
+        <text x={padL - 8} y={yAt(tick) + 3} textAnchor="end" className="skyui-chart-axis">{fmtNumber(tick, decimals)}</text>
+      </g>)}
+      {series.map(item => {
+        const points = item.data.map((value, index) => `${xAt(index).toFixed(1)},${yAt(value).toFixed(1)}`).join(' ')
+        return <g key={item.name}>
+          <polyline points={points} fill="none" stroke="var(--skyui-ink)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray={item.dashed ? '4 3' : undefined} />
+          {item.data.map((value, index) => <circle key={index} cx={xAt(index)} cy={yAt(value)} r="2.5" fill="var(--skyui-ink)" />)}
+        </g>
+      })}
+      {labels && labels.length > 0 && <>
+        <text x={padL} y={height - 8} className="skyui-chart-label">{labels[0]}</text>
+        <text x={width - padR} y={height - 8} textAnchor="end" className="skyui-chart-label">{labels[labels.length - 1]}</text>
+      </>}
+    </svg>
+    {series.length > 1 && <figcaption className="skyui-chart-legend">{series.map(item => <span key={item.name}><i className={item.dashed ? 'dashed' : ''} />{item.name}</span>)}</figcaption>}
+  </figure>
+}
+
+/* 环形仪表：单一百分比水位，比进度条更适合「占比 / 完成度」 */
+export function Gauge({ value, max = 100, size = 96, thickness = 7, label, decimals = 0, className = '' }: { value: number; max?: number; size?: number; thickness?: number; label?: string; decimals?: number; className?: string }) {
+  const radius = (size - thickness) / 2
+  const circumference = 2 * Math.PI * radius
+  const ratio = max === 0 ? 0 : Math.max(0, Math.min(1, value / max))
+  return <div className={`skyui-gauge ${className}`} style={{ width: size, height: size }} role="img" aria-label={label || `完成度 ${fmtNumber(value, decimals)} / ${fmtNumber(max, decimals)}`}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--skyui-line)" strokeWidth={thickness} />
+      <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--skyui-ink)" strokeWidth={thickness} strokeLinecap="round" strokeDasharray={`${circumference * ratio} ${circumference}`} transform={`rotate(-90 ${size / 2} ${size / 2})`} className="skyui-gauge-arc" />
+    </svg>
+    <span className="skyui-gauge-text" style={{ fontSize: size / 4.4 }}>{fmtNumber(value, decimals)}<small>%</small></span>
+  </div>
+}
+
+/* 阈值水位条：在进度条上标出分级刻度线，让「离阈值还差多少」一眼可见 */
+export function Meter({ value, max = 100, thresholds = [], showValue = true, label, className = '' }: { value: number; max?: number; thresholds?: number[]; showValue?: boolean; label?: string; className?: string }) {
+  const ratio = max === 0 ? 0 : Math.max(0, Math.min(1, value / max))
+  return <div className={`skyui-meter ${className}`}>
+    {showValue && <span className="skyui-meter-value">{fmtNumber(value)}<small>%</small></span>}
+    <div className="skyui-meter-track" role="meter" aria-valuenow={value} aria-valuemin={0} aria-valuemax={max} aria-label={label || `水位 ${fmtNumber(value)}%`}>
+      <span className="skyui-meter-fill" style={{ width: `${ratio * 100}%` }} />
+      {thresholds.map(mark => <i key={mark} className="skyui-meter-tick" style={{ left: `${(mark / max) * 100}%` }} />)}
+    </div>
+  </div>
+}
+
+/* 数字滚动：把大数值变化可视化，decimals 控制小数位 */
+export function Counter({ value, decimals = 0, duration = 1100, suffix, className = '' }: { value: number; decimals?: number; duration?: number; suffix?: string; className?: string }) {
+  const [display, setDisplay] = useState(0)
+  const frame = useRef<number>(0)
+  const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  useEffect(() => {
+    if (reduced) { setDisplay(value); return }
+    const start = performance.now()
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setDisplay(value * eased)
+      if (progress < 1) frame.current = requestAnimationFrame(tick)
+    }
+    frame.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame.current)
+  }, [value, duration, reduced])
+  return <b className={`skyui-counter ${className}`}>{fmtNumber(display, decimals)}{suffix && <small>{suffix}</small>}</b>
+}
+
+/* 阈值图例：把「60% 评估 / 80% 执行」这类分级策略显式展示，避免读表的人自己换算 */
+export function ThresholdLegend({ items, className = '' }: { items: { threshold: number; label: string }[]; className?: string }) {
+  return <div className={`skyui-threshold ${className}`}>
+    {items.map(item => <span key={item.threshold}><b>{item.threshold}%</b>{item.label}</span>)}
+  </div>
+}
+
+/* 搜索框：表格/列表的即时过滤入口 */
+export function SearchInput({ value, onChange, placeholder = '搜索…', ariaLabel = '搜索', className = '' }: { value: string; onChange: (value: string) => void; placeholder?: string; ariaLabel?: string; className?: string }) {
+  return <div className={`skyui-search ${className}`}>
+    <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="7" cy="7" r="4.5" /><path d="M10.5 10.5L14 14" /></svg>
+    <input type="search" value={value} placeholder={placeholder} aria-label={ariaLabel} onChange={event => onChange(event.target.value)} />
+    {value && <button type="button" aria-label="清空搜索" onClick={() => onChange('')}>×</button>}
+  </div>
+}
+
+/* 筛选胶囊：单选分类切换，比下拉更适合少量并列选项 */
+export function FilterChips({ options, value, onChange, ariaLabel = '筛选', className = '' }: { options: { value: string; label: string; count?: number }[]; value: string; onChange: (value: string) => void; ariaLabel?: string; className?: string }) {
+  return <div className={`skyui-chips ${className}`} role="group" aria-label={ariaLabel}>
+    {options.map(option => <button key={option.value} type="button" aria-pressed={option.value === value} className={option.value === value ? 'active' : ''} onClick={() => onChange(option.value)}>
+      {option.label}{option.count !== undefined && <span>{option.count}</span>}
+    </button>)}
+  </div>
+}

@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { Accordion, Alert, Avatar, Button, Calendar, Card, Carousel, Checkbox, Command, ConfigProvider, DatePicker, FormItem, Grid, GridItem, HoverCard, Kbd, Modal, Popover, RadioGroup, Rate, Segmented, Spin, Statistic, Table, Tabs, Tag, Text, Title, ToastProvider, Toggle, Tooltip, useForm, useToast } from './ui'
+import { Accordion, Alert, Avatar, Button, Calendar, Card, Carousel, Checkbox, Command, ConfigProvider, Counter, DatePicker, FilterChips, FormItem, Gauge, Grid, GridItem, HoverCard, Kbd, LineChart, Meter, Modal, Popover, RadioGroup, Rate, SearchInput, Segmented, Sparkline, Spin, Statistic, Table, Tabs, Tag, Text, ThresholdLegend, Title, ToastProvider, Toggle, Tooltip, useForm, useToast } from './ui'
 
 afterEach(cleanup)
 
@@ -254,5 +254,92 @@ describe('v1.3.0 展示与布局', () => {
   it('Table 加载态渲染骨架行', () => {
     const { container } = render(<Table columns={[{ key: 'name', header: '名称' }]} rows={[]} loading />)
     expect(container.querySelectorAll('.skyui-skeleton').length).toBeGreaterThan(0)
+  })
+})
+
+describe('数据展示组件', () => {
+  it('Sparkline 渲染折线与端点，数据不足时降级为占位符', () => {
+    const { container, rerender } = render(<Sparkline data={[1097, 1097, 1115, 1260]} />)
+    const svg = container.querySelector('.skyui-sparkline') as SVGElement
+    expect(svg.querySelector('polyline')).not.toBeNull()
+    expect(svg.querySelector('circle')).not.toBeNull()
+    expect(svg.getAttribute('aria-label')).toContain('1,260')
+    rerender(<Sparkline data={[5]} />)
+    expect(container.querySelector('.skyui-sparkline-empty')).not.toBeNull()
+  })
+
+  it('Sparkline 全部等值时呈水平线且不超出画布', () => {
+    const { container } = render(<Sparkline data={[8, 8, 8]} />)
+    const points = (container.querySelector('polyline') as SVGElement).getAttribute('points')!.split(' ')
+    const ys = points.map(point => Number(point.split(',')[1]))
+    expect(new Set(ys).size).toBe(1)
+    expect(ys[0]).toBeGreaterThanOrEqual(0)
+    expect(ys[0]).toBeLessThanOrEqual(20)
+  })
+
+  it('LineChart 多序列渲染图例与网格，空数据给出占位', () => {
+    const { container, rerender } = render(<LineChart series={[{ name: '生产', data: [1, 2, 3] }, { name: '测试', data: [2, 2, 1], dashed: true }]} labels={['9月', '10月']} />)
+    expect(container.querySelectorAll('polyline').length).toBe(2)
+    expect(container.querySelectorAll('.skyui-chart-legend span').length).toBe(2)
+    expect(container.querySelector('.skyui-chart-legend i.dashed')).not.toBeNull()
+    expect(container.querySelectorAll('.skyui-chart-label').length).toBe(2)
+    rerender(<LineChart series={[]} />)
+    expect(container.querySelector('.skyui-chart-empty')).not.toBeNull()
+  })
+
+  it('LineChart 单一等值序列仍保留上下留白', () => {
+    const { container } = render(<LineChart series={[{ name: '恒定', data: [50, 50, 50] }]} />)
+    const ys = Array.from(container.querySelectorAll('circle')).map(node => Number(node.getAttribute('cy')))
+    expect(new Set(ys).size).toBe(1)
+    expect(Math.min(...ys)).toBeGreaterThan(0)
+    expect(Math.max(...ys)).toBeLessThan(180)
+  })
+
+  it('Gauge 超出量程时填满整圈而不溢出', () => {
+    const { container } = render(<Gauge value={150} />)
+    const arc = container.querySelector('.skyui-gauge-arc') as SVGElement
+    const [dash, full] = arc.getAttribute('stroke-dasharray')!.split(' ').map(Number)
+    expect(dash).toBe(full)
+    expect(container.textContent).toContain('150')
+  })
+
+  it('Meter 渲染阈值刻度并暴露 meter 语义', () => {
+    const { container } = render(<Meter value={74.1} thresholds={[60, 80, 90]} label="CVM 水位" />)
+    expect(container.querySelectorAll('.skyui-meter-tick').length).toBe(3)
+    const track = screen.getByRole('meter', { name: 'CVM 水位' })
+    expect(track.getAttribute('aria-valuenow')).toBe('74.1')
+  })
+
+  it('Counter 尊重 prefers-reduced-motion 直接呈现终值', () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true }))
+    render(<Counter value={1260} />)
+    expect(screen.getByText(/1,260/)).not.toBeNull()
+    vi.unstubAllGlobals()
+  })
+
+  it('SearchInput 受控输入并可一键清空', () => {
+    const onChange = vi.fn()
+    const { rerender } = render(<SearchInput value="CVM" onChange={onChange} />)
+    const input = screen.getByRole('searchbox', { name: '搜索' })
+    fireEvent.change(input, { target: { value: 'CBS' } })
+    expect(onChange).toHaveBeenCalledWith('CBS')
+    rerender(<SearchInput value="CVM" onChange={onChange} />)
+    fireEvent.click(screen.getByRole('button', { name: '清空搜索' }))
+    expect(onChange).toHaveBeenCalledWith('')
+  })
+
+  it('FilterChips 标记选中项并回传新值', () => {
+    const onChange = vi.fn()
+    render(<FilterChips options={[{ value: 'all', label: '全部', count: 68 }, { value: '计算', label: '计算' }]} value="all" onChange={onChange} />)
+    const all = screen.getByRole('button', { name: /全部/ })
+    expect(all.getAttribute('aria-pressed')).toBe('true')
+    fireEvent.click(screen.getByRole('button', { name: '计算' }))
+    expect(onChange).toHaveBeenCalledWith('计算')
+  })
+
+  it('ThresholdLegend 展示分级策略', () => {
+    render(<ThresholdLegend items={[{ threshold: 60, label: '容量评估' }, { threshold: 90, label: '紧急处置' }]} />)
+    expect(screen.getByText('60%')).not.toBeNull()
+    expect(screen.getByText('紧急处置')).not.toBeNull()
   })
 })
