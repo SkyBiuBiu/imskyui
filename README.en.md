@@ -11,7 +11,7 @@ Copy the source — no npm package, no icon library, zero component dependencies
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](LICENSE)
 
-**61** components & scenarios · **58** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
+**66** components & scenarios · **66** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
 
 [README (中文)](README.md) · [Component API](docs/components.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
 
@@ -23,7 +23,7 @@ Copy the source — no npm package, no icon library, zero component dependencies
 
 SkyUI is not an installable package — it is a **copy-paste design language**. You take two files (`ui.tsx` + `ui.css`) into your React project and own the code.
 
-- 58 reusable components & utilities (zero icon dependency):
+- 66 reusable components & utilities (zero icon dependency, zero chart library):
   - **Typography & containers (6):** `Title`, `Text`, `Paragraph`, `Kbd`, `Card`, `Label`
   - **Base (12):** `Button`, `Input`, `Switch`, `Badge`, `Avatar`, `Checkbox`, `Select`, `Textarea`, `Alert`, `Skeleton`, `EmptyState`, `HttpStatusPage`
   - **Overlays (8):** `Tooltip`, `HoverCard`, `Dropdown`, `Popover`, `Modal`, `Drawer`, `ToastProvider`, `useToast`
@@ -31,21 +31,23 @@ SkyUI is not an installable package — it is a **copy-paste design language**. 
   - **Navigation (5):** `Tabs`, `Accordion`, `Breadcrumb`, `Pagination`, `Steps`
   - **Data & layout (14):** `Progress`, `Slider`, `AvatarGroup`, `Tag`, `Table`, `Statistic`, `Timeline`, `Descriptions`, `Divider`, `Stack`, `Container`, `Grid`, `GridItem`, `Carousel`
   - **Forms & commands (5):** `useForm`, `FormItem`, `Command`, `Calendar`, `DatePicker`
+  - **Charts & metrics (8):** `Sparkline`, `LineChart`, `Gauge`, `Meter`, `Counter`, `ThresholdLegend`, `SearchInput`, `FilterChips`
   - **Config (3):** `ConfigProvider`, `useSkyUIConfig`, `Spin`
 - Optional full scenarios: form validation, multi-step form, file upload, data table, skeleton states, breadcrumbs
 - 18 HTTP status pages (200 → 504), including a 429 with retry countdown
+- Charts are hand-written SVG / CSS too — line chart, sparkline, gauge, threshold meter and animated counter ship with no charting dependency
 - Light/dark theme via a single CSS class; all visuals drawn in CSS, zero image assets
 
-## The 61-card gallery
+## The 66-card gallery
 
-The showcase gallery is organized into 6 categories — **61 cards** in total, with keyword search and grid / list views:
+The showcase gallery is organized into 6 categories — **66 cards** in total, with keyword search and grid / list views:
 
 | Category | Cards | Contents |
 | --- | --- | --- |
 | **Base** | 15 | Buttons, Tabs, Badges, Accordion, Tooltip, Dropdown, Divider, Typography, Card, Segmented, Toggle, Popover, HoverCard, Grid, ConfigProvider |
 | **Forms** | 11 | Inputs, selection controls, progress & slider, contact form, multi-step form, settings, file upload, RadioGroup, Rate, Calendar, DatePicker |
 | **Feedback** | 6 | Notifications & Toast, dialog, drawer, data states, Spin, command palette |
-| **Data display** | 9 | Profile card, data overview, avatars, data table, mini table, statistic, timeline, descriptions, carousel |
+| **Data display** | 14 | Profile card, data overview, avatars, data table, mini table, statistic, timeline, descriptions, carousel, LineChart, Sparkline, Gauge & Meter, Counter, Search & Filter |
 | **Navigation** | 2 | Breadcrumb & pagination, steps |
 | **HTTP pages** | 18 | Every status code from 200 to 504 |
 

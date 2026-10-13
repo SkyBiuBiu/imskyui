@@ -35,12 +35,51 @@ pnpm build          # 生产构建（产物在 dist/client）
 
 - 提交信息使用约定式前缀：`feat:` `fix:` `docs:` `style:` `refactor:` `test:` `chore:`。
 - 版本号遵循 SemVer：新增组件 / props → minor；修复 → patch；破坏性改动 → major 并必须在 CHANGELOG 里写迁移说明。
-- 发版流程：更新 `package.json` `version` → 在 `CHANGELOG.md` 顶部新增版本段落 → 合入 main → 打 annotated tag（`git tag -a vX.Y.Z -m "..."`）→ GitHub Release 引用 CHANGELOG 对应段落。
+
+### 版本号只有一个来源
+
+`package.json` 的 `version` 与 `src/version.ts` 的 `VERSION` 必须一致，界面上的所有版本号文案
+（侧边栏更新链接、页面徽章、更新日志弹窗）一律引用 `src/version.ts` 的常量，**不要在
+`index.tsx` 里硬编码 `v1.x`**。
+
+```bash
+# 发版前校验：package.json / version.ts / CHANGELOG / README 四者是否同步
+pnpm check:version
+```
+
+校验脚本会拦截：版本号不一致、CHANGELOG 缺条目、源码出现硬编码版本号、README 组件计数过期。
+CI 也会跑这一项，改了组件忘记同步会直接失败。
+
+> 例外：`snippets` 里的示例代码字符串、以及 409 场景的业务文案（讲的是资源版本冲突）不参与校验，
+> 脚本里有显式豁免清单。
+
+### 发版流程
+
+```bash
+# 1. 改版本号（package.json 与 src/version.ts 两处）
+# 2. CHANGELOG.md 顶部新增版本段落
+# 3. 全量校验
+pnpm release:check      # check:version + typecheck + test + build
+# 4. 界面有变化时重新截图（需先pnpm build 并启动 vite preview --port 4190）
+pnpm capture
+# 5. 提交、合入 main、打 tag
+git tag -a vX.Y.Z -m "..."
+git push origin main --tags
+# 6. GitHub Release 正文引用 CHANGELOG 对应段落
+```
+
+### README 示意图
+
+`docs/images/` 下的截图由 `pnpm capture` 生成（Playwright，视口清单在 `scripts/capture.mjs`）。
+组件有视觉变化时必须重跑，否则 README 会与实际界面脱节 —— v1.3.0 的截图里「数据概览」还是
+CSS 柱状 div，看不到任何真实图表。
+
+局部重跑：`SHOT_FILTER=11b,13-mobile pnpm capture`
 
 ## 提交 PR 之前
 
 ```bash
-pnpm typecheck && pnpm test && pnpm build
+pnpm release:check
 ```
 
-三件事全绿再提。CI 会跑同样的检查。
+包含版本一致性校验、类型检查、单元测试与生产构建，全绿再提。CI 会跑同样的检查。

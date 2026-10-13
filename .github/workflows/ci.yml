@@ -23,6 +23,11 @@ jobs:
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
+      # 版本号散落多处时手工同步极易漏改，此项强制 package.json / version.ts /
+      # CHANGELOG / README 四者一致，并禁止源码出现硬编码版本号
+      - name: 版本一致性
+        run: pnpm check:version
+
       - name: 生产构建
         run: pnpm build
 

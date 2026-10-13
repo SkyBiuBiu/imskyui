@@ -435,6 +435,119 @@ const { values, errors, setField, handleSubmit } = useForm({
 
 ---
 
+## v1.4.0 新增组件（ui.tsx，8 个）
+
+图表与指标系列。全部为手写 SVG / CSS，不引入任何图表库，只消费既有 `--skyui-*` 变量。
+
+### Sparkline
+
+表格行内嵌的迷你走势，无坐标轴、无交互。数据点少于 2 个时降级渲染为占位符。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `data` | `number[]` | 必填 | 数值序列，按给定顺序连线 |
+| `width` | `number` | `72` | 像素宽度 |
+| `height` | `number` | `20` | 像素高度 |
+| `label` | `string` | 自动生成 | `aria-label`，缺省为「趋势，最新值 N」 |
+
+```tsx
+<Sparkline data={[64, 66, 68, 71, 74]} />
+```
+
+### LineChart
+
+多序列折线趋势图。纵轴值域贴住数据范围并留12% 上下padding，等值序列不会退化成贴边直线。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `series` | `{ name: string; data: number[]; dashed?: boolean }[]` | 必填 | 多序列；`dashed` 为虚线，用于区分对照序列 |
+| `labels` | `string[]` | — | 时间标签，只渲染首尾两个 |
+| `height` | `number` | `180` | 像素高度 |
+| `decimals` | `number` | `0` | 纵轴刻度小数位 |
+| `showGrid` | `boolean` | `true` | 是否绘制网格线与纵轴刻度 |
+| `ariaLabel` | `string` | `'增长趋势图'` | `role="img"` 的无障碍标签 |
+
+序列多于一条时自动渲染图例。`series` 为空数组时降级为「暂无数据」占位。
+
+### Gauge
+
+环形仪表，适合单一占比或完成度。数值超量程按比例截断而非溢出。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `number` | 必填 | 当前值 |
+| `max` | `number` | `100` | 量程上限 |
+| `size` | `number` | `96` | 直径（像素） |
+| `thickness` | `number` | `7` | 环宽 |
+| `decimals` | `number` | `0` | 中心数值小数位 |
+| `label` | `string` | 自动生成 | `aria-label` |
+
+### Meter
+
+阈值水位条。在进度条上标出分级刻度，让「离阈值还差多少」一眼可见。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `number` | 必填 | 当前水位 |
+| `max` | `number` | `100` | 量程上限 |
+| `thresholds` | `number[]` | `[]` | 刻度位置，如 `[60, 80, 90]` |
+| `showValue` | `boolean` | `true` | 是否显示左侧数值 |
+| `label` | `string` | 自动生成 | `role="meter"` 的无障碍标签 |
+
+配合 `ThresholdLegend` 使用，可把阈值策略显式写在图旁边：
+
+```tsx
+<Meter value={92.6} thresholds={[60, 80, 90]} label="CVM 水位" />
+<ThresholdLegend items={[
+  { threshold: 60, label: '容量评估' },
+  { threshold: 80, label: '扩容执行' },
+  { threshold: 90, label: '紧急处置' },
+]} />
+```
+
+### Counter
+
+数字滚动。尊重 `prefers-reduced-motion`——用户开启减弱动效时直接呈现终值，不做逐帧动画。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `number` | 必填 | 目标数值 |
+| `decimals` | `number` | `0` | 小数位 |
+| `duration` | `number` | `1100` | 动画时长（毫秒） |
+| `suffix` | `string` | — | 后缀，如 `%` |
+
+### ThresholdLegend
+
+阈值分级图例。
+
+| Prop | 类型 | 说明 |
+| --- | --- | --- |
+| `items` | `{ threshold: number; label: string }[]` | 分级项，渲染为「阈值 + 说明」 |
+
+### SearchInput
+
+带一键清空的搜索框。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `value` | `string` | 必填 | 受控值 |
+| `onChange` | `(value: string) => void` | 必填 | 值变化回调（已去除原生事件对象） |
+| `placeholder` | `string` | `'搜索…'` | 占位文案 |
+| `ariaLabel` | `string` | `'搜索'` | 无障碍标签 |
+
+### FilterChips
+
+单选分类筛选胶囊。选中项输出 `aria-pressed="true"`。
+
+| Prop | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `options` | `{ value: string; label: string; count?: number }[]` | 必填 | 选项列表 |
+| `value` | `string` | 必填 | 当前选中值 |
+| `onChange` | `(value: string) => void` | 必填 | 选中变化回调 |
+| `ariaLabel` | `string` | `'筛选'` | `role="group"` 的无障碍标签 |
+
+---
+
 ## 完整场景（scenarios.tsx，可选下载）
 
 `scenarios.tsx` 依赖同目录的 `ui.tsx`，提供 8 个导出。这些都是**可直接渲染的演示场景**：数据是示例、表单只做本地校验、不发网络请求，接入自己的项目时替换其中的假数据与提交逻辑即可。
