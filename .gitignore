@@ -8,6 +8,6 @@ dist
 src/routeTree.gen.ts
 .playwright-cli/
 
-# Cloudflare Workers local state
+# Cloudflare Workers / Vercel local state
 .wrangler
 .vercel

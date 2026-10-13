@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "vite",
+  "framework": "tanstack-start",
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm build",
-  "buildOutputDirectory": "dist/client"
+  "buildCommand": "pnpm build"
 }
