@@ -1,0 +1,8 @@
+# 引入本文件后 pnpm 进入 workspace 模式，packages 字段为必填，
+# 否则 actions/setup-node 的 pnpm store 缓存步骤会报「packages field missing or empty」
+packages:
+  - '.'
+
+allowBuilds:
+  esbuild: true
+  workerd: true
