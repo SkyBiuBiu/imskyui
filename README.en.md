@@ -107,8 +107,13 @@ pnpm dev   # http://localhost:3000
 | `pnpm typecheck` | TypeScript type checking |
 | `pnpm test` | vitest unit tests |
 | `pnpm build` | Production build (generates `routeTree.gen.ts`, which typecheck depends on) |
+| `pnpm capture` | Re-capture every `docs/images/` screenshot listed in the README (Playwright) |
+| `pnpm release:check` | Pre-release gate (version consistency + typecheck + tests + build) |
+| `pnpm release` | Ship a release: verify → annotated tag → GitHub Release |
 
-CI runs build → typecheck → tests on every push and PR. The build outputs `dist/client` (client) and `dist/server` (SSR) — platform-neutral, deployable to Vercel, Cloudflare, Netlify, or your own Node server.
+Versions follow SemVer and live in exactly two places (`package.json` and `src/version.ts`), kept in sync by `pnpm check:version`. CI runs build → typecheck → tests → version consistency on every push and PR, so a drifting version number cannot be merged.
+
+The build outputs `dist/client` (client) and `dist/server` (SSR) — platform-neutral, deployable to Vercel, Cloudflare, Netlify, or your own Node server.
 
 ## License
 

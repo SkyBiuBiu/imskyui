@@ -55,18 +55,38 @@ CI 也会跑这一项，改了组件忘记同步会直接失败。
 
 ### 发版流程
 
+版本号改完后，一条命令完成校验 → 打 tag → 创建 Release：
+
 ```bash
 # 1. 改版本号（package.json 与 src/version.ts 两处）
 # 2. CHANGELOG.md 顶部新增版本段落
-# 3. 全量校验
-pnpm release:check      # check:version + typecheck + test + build
-# 4. 界面有变化时重新截图（需先pnpm build 并启动 vite preview --port 4190）
+# 3. 界面有变化时重新截图（需先 pnpm build 并启动 vite preview --port 4190）
 pnpm capture
-# 5. 提交、合入 main、打 tag
-git tag -a vX.Y.Z -m "..."
-git push origin main --tags
-# 6. GitHub Release 正文引用 CHANGELOG 对应段落
+
+# 4. 提交并合入 main，然后：
+pnpm release --dry-run    # 先看一遍将要执行的动作，不落地
+pnpm release# 正式发版
 ```
+
+`pnpm release` 做的事（`scripts/release.mjs`）：
+
+| 步骤 | 内容 |
+|---|---|
+| 前置校验 | 必须在 main 分支、工作区干净、`gh` 已登录、CHANGELOG 有当前版本段落 |
+| 全量校验 | 复用 `pnpm release:check`：版本一致性 + 类型 + 测试 + 构建 |
+| 打 tag | annotated tag，message 取 CHANGELOG 段落前几行 |
+| Release 正文 | **自动从 `CHANGELOG.md` 抽取当前版本段落**，不再人工复制粘贴 |
+
+常用参数：
+
+- `--dry-run`：只打印动作不落地。校验逻辑仍会真实执行（否则分支/状态判断会拿到空值误判）。
+- `--draft`：创建草稿 Release，人工确认后再点Publish。
+
+已存在的 tag 会自动跳过打 tag 步骤，因此 `--dry-run` 可以对已发过的版本安全重跑。
+
+> Windows 上 `pnpm` 是 `.cmd` shim，Node 20+ 禁止不经 shell 直接 spawn，
+> 所以脚本里只对 `pnpm` 置 `shell: true`；`git` / `gh` 是真实 exe，
+> tag message 里的中文与换行走 shell 会被引号规则破坏，必须保持 argv 直传。
 
 ### README 示意图
 

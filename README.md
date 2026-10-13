@@ -328,8 +328,13 @@ pnpm dev
 | `pnpm typecheck` | TypeScript 类型检查 |
 | `pnpm test` | vitest 单元测试 |
 | `pnpm build` | 生产构建（生成 `routeTree.gen.ts`，类型检查依赖它） |
+| `pnpm capture` | 按 README 示意图清单批量重截 `docs/images/`（Playwright） |
+| `pnpm release:check` | 发版前全量校验（版本一致性 + 类型 + 测试 + 构建） |
+| `pnpm release` | 一键发版：校验 → 打 annotated tag → 创建 GitHub Release |
 
-提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。CI 在每次 push 与 PR 时运行构建、类型检查与测试。
+版本号遵循 SemVer，且只存在于 `package.json` 与 `src/version.ts` 两处，由 `pnpm check:version` 强制同步 —— CI 会在每次 push 与 PR 时运行构建、类型检查、测试与版本一致性校验，版本号漂移无法合入。
+
+提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。
 
 构建产物为 `dist/client`（客户端）与 `dist/server`（SSR），平台中立 —— Vercel、Cloudflare、Netlify 或自建 Node 服务器均可接入。
 
