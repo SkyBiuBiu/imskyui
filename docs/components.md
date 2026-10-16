@@ -385,7 +385,7 @@ toast('一切就绪。', { variant: 'success' })
 
 | 组件 | Props | 说明 |
 | --- | --- | --- |
-| `Popover` | `trigger; content; align?: 'start'\|'end'; open?; onOpenChange?` | 点击式气泡卡片，承载交互内容；支持受控 / 非受控 |
+| `Popover` | `trigger; content; align?: 'start'\|'end'; open?; onOpenChange?` | 点击式气泡卡片，承载交互内容；支持受控 / 非受控。trigger 为 button / a 或自定义组件（如 `Button`）时直接复用该元素注入交互属性，不会嵌套 button |
 | `HoverCard` | `content; children` | 悬停 / 键盘聚焦显示的卡片，纯 CSS 驱动 |
 | `Spin` | `size?: 'sm'\|'md'\|'lg'; label?('加载中')` | 独立加载指示器，`role="status"` |
 

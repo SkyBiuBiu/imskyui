@@ -1,5 +1,5 @@
-import { createContext, Fragment, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
-import type { ButtonHTMLAttributes, FormEvent, HTMLAttributes, InputHTMLAttributes, KeyboardEvent as ReactKeyboardEvent, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
+import { cloneElement, createContext, Fragment, isValidElement, useCallback, useContext, useEffect, useId, useRef, useState } from 'react'
+import type { ButtonHTMLAttributes, FormEvent, HTMLAttributes, InputHTMLAttributes, KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, ReactElement, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 import './ui.css'
 
 const ConfigContext = createContext<{ theme?: 'light' | 'dark'; size?: 'sm' | 'md' | 'lg' }>({})
@@ -464,8 +464,25 @@ export function Popover({ trigger, content, align = 'start', ariaLabel = '气泡
     document.addEventListener('keydown', onKeyDown)
     return () => { document.removeEventListener('pointerdown', onPointerDown); document.removeEventListener('keydown', onKeyDown) }
   }, [isOpen])
+  // trigger 已是可交互元素时克隆注入交互属性，而不是再包一层 <button>：
+  // 包层会造成 button 嵌套 button 的无效 HTML，直接引发 SSR 水合失败。
+  // 可克隆的三类：内在 button / a、自定义组件（如 <Button>，渲染出 button）；
+  // Fragment 与普通内在元素（span 等）没有自己的点击语义，仍包 <button> 保持键盘可达。
+  const clonableTrigger = isValidElement(trigger) && trigger.type !== Fragment && (typeof trigger.type === 'string' ? ['button', 'a'].includes(trigger.type) : true)
+    ? (trigger as ReactElement<{ onClick?: (event: ReactMouseEvent<HTMLElement>) => void }>)
+    : null
+  const triggerProps = {
+    'aria-haspopup': 'dialog' as const,
+    'aria-expanded': isOpen,
+    onClick: (event: ReactMouseEvent<HTMLElement>) => {
+      clonableTrigger?.props.onClick?.(event)
+      setOpen(!isOpen)
+    },
+  }
   return <div ref={rootRef} className={`skyui-popover ${className}`}>
-    <button type="button" aria-haspopup="dialog" aria-expanded={isOpen} className="skyui-popover-trigger" onClick={() => setOpen(!isOpen)}>{trigger}</button>
+    {clonableTrigger
+      ? cloneElement(clonableTrigger, triggerProps)
+      : <button type="button" className="skyui-popover-trigger" {...triggerProps}>{trigger}</button>}
     {isOpen && <div className={`skyui-popover-panel skyui-popover-${align}`} role="dialog" aria-label={ariaLabel}>{content}</div>}
   </div>
 }

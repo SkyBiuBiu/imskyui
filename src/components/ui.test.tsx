@@ -69,6 +69,25 @@ describe('导航与浮层组件', () => {
     expect(dialog).not.toBeNull()
     expect(dialog?.open ?? true).toBe(false)
   })
+
+  it('Popover 的 Button trigger 不产生嵌套 button，点击可切换面板', () => {
+    const { container } = render(<Popover ariaLabel="删除确认" trigger={<Button variant="secondary" size="sm">删除项目</Button>} content={<div>确认删除</div>} />)
+    // 曾经把 trigger 再包一层 <button>，形成 button 嵌套 button 的无效 HTML，导致 SSR 水合失败
+    expect(container.querySelector('button button')).toBeNull()
+    const triggerButton = screen.getByRole('button', { name: '删除项目' })
+    expect(triggerButton.getAttribute('aria-haspopup')).toBe('dialog')
+    expect(triggerButton.getAttribute('aria-expanded')).toBe('false')
+    fireEvent.click(triggerButton)
+    expect(screen.getByText('确认删除')).not.toBeNull()
+    expect(triggerButton.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('Popover 对普通内容 trigger 仍渲染按钮包裹', () => {
+    const { container } = render(<Popover trigger={<>项目信息</>} content={<div>项目详情</div>} />)
+    expect(container.querySelector('button.skyui-popover-trigger')).not.toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: /项目信息/ }))
+    expect(screen.getByText('项目详情')).not.toBeNull()
+  })
 })
 
 describe('数据组件', () => {
