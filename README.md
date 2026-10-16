@@ -14,11 +14,12 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-202020?style=flat-square&logo=tailwindcss&logoColor=202020)](https://tailwindcss.com)
 [![Release](https://img.shields.io/github/v/release/SkyBiuBiu/imskyui?style=flat-square&labelColor=202020)](https://github.com/SkyBiuBiu/imskyui/releases)
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
+[![GitHub Pages](https://img.shields.io/badge/在线演示-GitHub_Pages-202020?style=flat-square&logo=github&logoColor=white)](https://skybiubiu.github.io/imskyui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](#许可证)
 
 **66** 个组件与场景 · **66** 个组件与工具 · **2** 套主题 · **18** 种 HTTP 状态页面 · **0** 个组件依赖
 
-[快速开始](#这是什么) · [组件 API](docs/components.md) · [更新日志](CHANGELOG.md) · [English](README.en.md) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
+[在线演示](https://skybiubiu.github.io/imskyui/) · [快速开始](#这是什么) · [组件 API](docs/components.md) · [更新日志](CHANGELOG.md) · [English](README.en.md) · [接入方式](#接入你的项目) · [本地运行](#本地运行)
 
 </div>
 
@@ -328,6 +329,7 @@ pnpm dev
 | `pnpm typecheck` | TypeScript 类型检查 |
 | `pnpm test` | vitest 单元测试 |
 | `pnpm build` | 生产构建（生成 `routeTree.gen.ts`，类型检查依赖它） |
+| `pnpm build:pages` | GitHub Pages 静态构建（`/imskyui/` base + 预渲染唯一路由，产物在 `dist/client`） |
 | `pnpm capture` | 按 README 示意图清单批量重截 `docs/images/`（Playwright） |
 | `pnpm release:check` | 发版前全量校验（版本一致性 + 类型 + 测试 + 构建） |
 | `pnpm release` | 一键发版：校验 → 打 annotated tag → 创建 GitHub Release |
@@ -337,6 +339,8 @@ pnpm dev
 提交与发版约定见 [CONTRIBUTING.md](CONTRIBUTING.md)，历史版本见 [CHANGELOG.md](CHANGELOG.md)。
 
 构建产物为 `dist/client`（客户端）与 `dist/server`（SSR），平台中立 —— Vercel、Cloudflare、Netlify 或自建 Node 服务器均可接入。
+
+不想本地运行？直接访问在线演示：**[skybiubiu.github.io/imskyui](https://skybiubiu.github.io/imskyui/)** —— 由 `.github/workflows/pages.yml` 在每次 push 到 `main` 时自动构建并部署。
 
 ---
 

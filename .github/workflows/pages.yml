@@ -1,0 +1,64 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pages 部署需要写权限；id-token 用于 deploy-pages 的 OIDC 认证
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只允许一个 Pages 部署排队，避免并发发布互相覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # version 必须显式指定：仓库未在 package.json 中声明 packageManager 字段，
+      # 缺省时 action-setup 会直接报「No pnpm version is specified」
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      # GitHub Pages 只托管静态文件：构建时注入 /imskyui/ base 并预渲染唯一路由，
+      # 静态产物全部落在 dist/client（SSR 产物 dist/server 不上传）
+      - name: 构建 Pages 静态产物
+        run: pnpm build:pages
+
+      # 复制一份 404.html：未匹配路径由 GitHub Pages 返回 404.html，
+      # 加载同一份应用后由前端渲染站内 404 界面
+      - name: 生成 404 回退页
+        run: cp dist/client/index.html dist/client/404.html
+
+      # 禁用 Jekyll 处理，避免下划线开头的资源被跳过
+      - name: 写入 .nojekyll
+        run: touch dist/client/.nojekyll
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/client
+
+      - name: 部署到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

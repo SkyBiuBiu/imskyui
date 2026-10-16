@@ -9,11 +9,12 @@ Copy the source — no npm package, no icon library, zero component dependencies
 
 [![Release](https://img.shields.io/github/v/release/SkyBiuBiu/imskyui?style=flat-square&labelColor=202020)](https://github.com/SkyBiuBiu/imskyui/releases)
 [![CI](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml/badge.svg?style=flat-square)](https://github.com/SkyBiuBiu/imskyui/actions/workflows/ci.yml)
+[![GitHub Pages](https://img.shields.io/badge/Live_Demo-GitHub_Pages-202020?style=flat-square&logo=github&logoColor=white)](https://skybiubiu.github.io/imskyui/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-202020?style=flat-square)](LICENSE)
 
 **66** components & scenarios · **66** components & utilities · **2** themes · **18** HTTP status pages · **0** dependencies
 
-[README (中文)](README.md) · [Component API](docs/components.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
+[Live demo](https://skybiubiu.github.io/imskyui/) · [README (中文)](README.md) · [Component API](docs/components.md) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
 
 </div>
 
@@ -107,6 +108,7 @@ pnpm dev   # http://localhost:3000
 | `pnpm typecheck` | TypeScript type checking |
 | `pnpm test` | vitest unit tests |
 | `pnpm build` | Production build (generates `routeTree.gen.ts`, which typecheck depends on) |
+| `pnpm build:pages` | Static build for GitHub Pages (`/imskyui/` base + prerendered route; output `dist/client`) |
 | `pnpm capture` | Re-capture every `docs/images/` screenshot listed in the README (Playwright) |
 | `pnpm release:check` | Pre-release gate (version consistency + typecheck + tests + build) |
 | `pnpm release` | Ship a release: verify → annotated tag → GitHub Release |
@@ -114,6 +116,8 @@ pnpm dev   # http://localhost:3000
 Versions follow SemVer and live in exactly two places (`package.json` and `src/version.ts`), kept in sync by `pnpm check:version`. CI runs build → typecheck → tests → version consistency on every push and PR, so a drifting version number cannot be merged.
 
 The build outputs `dist/client` (client) and `dist/server` (SSR) — platform-neutral, deployable to Vercel, Cloudflare, Netlify, or your own Node server.
+
+Prefer not to run it locally? Visit the live demo: **[skybiubiu.github.io/imskyui](https://skybiubiu.github.io/imskyui/)** — built and deployed by `.github/workflows/pages.yml` on every push to `main`.
 
 ## License
 

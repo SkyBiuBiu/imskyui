@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
+    "build:pages": "cross-env DEPLOY_TARGET=github-pages vite build",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check:version": "node scripts/check-version.mjs",

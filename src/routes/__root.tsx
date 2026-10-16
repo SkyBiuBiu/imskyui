@@ -10,7 +10,7 @@ const siteDescription = 'skyui 是你的黑白 UI 组件库，提供基础组件
 
 export const Route = createRootRoute({
   head: () => ({
-    links: [{ rel: 'icon', type: 'image/svg+xml', href: '/skyui.svg' }],
+    links: [{ rel: 'icon', type: 'image/svg+xml', href: 'skyui.svg' }],
     meta: [
       {
         charSet: 'utf-8',
