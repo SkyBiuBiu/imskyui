@@ -33,7 +33,7 @@ nav { display: flex; flex-direction: column; gap: 5px; margin-top: 13px; }
 .nav-item { display: flex; align-items: center; gap: 11px; border: 0; border-radius: 6px; padding: 12px 13px; font-size: 12px; background: transparent; color: var(--secondary); text-align: left; }
 .nav-item.active { background: var(--ink); color: var(--background); }
 .nav-item:not(.active):hover { background: var(--subtle); }
-.nav-count { margin-left: auto; padding: 1px 5px; border-radius: 3px; background: #ffffff22; font-size: 9px; }
+.nav-count { margin-left: auto; padding: 1px 5px; border-radius: 3px; background: #ffffff22; font-size: 10px; }
 .sidebar-collection { margin-top: 31px; }
 .sidebar-collection .nav-label { margin-bottom: 12px; }
 .sidebar-collection > button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 13px; background: none; border: 0; font-size: 11px; color: var(--secondary); }
@@ -45,7 +45,7 @@ nav { display: flex; flex-direction: column; gap: 5px; margin-top: 13px; }
 .made-for { margin: 0 1px 21px; padding: 17px 14px; border: 1px solid var(--line); border-radius: 7px; background: var(--background); }
 .made-icon { display: block; margin-bottom: 12px; }
 .made-for h4 { font-size: 12px; font-weight: 550; }
-.made-for p { font-size: 10px; line-height: 1.9; margin: 7px 0 14px; color: var(--muted); }
+.made-for p { font-size: 11px; line-height: 1.9; margin: 7px 0 14px; color: var(--muted); }
 .made-for button { display: flex; align-items: center; gap: 8px; padding: 0; background: none; border: 0; font-size: 10px; }
 .update-link { display: flex; align-items: center; gap: 7px; background: none; border: 0; width: 100%; font-size: 9px; color: var(--muted); padding: 0 6px 22px; }
 .update-link > span:last-child { margin-left: auto; display: flex; gap: 5px; align-items: center; }
@@ -72,10 +72,10 @@ main { padding: 38px 37px 0; max-width: 1590px; margin: 0 auto; }
 .page-intro { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
 .eyebrow { display: flex; align-items: center; gap: 7px; font-size: 9px; letter-spacing: 1.8px; color: var(--secondary); }
 .eyebrow .small-dot { width: 4px; height: 4px; }
-.version-badge { padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; margin-left: 3px; letter-spacing: 0; font-size: 8px; }
+.version-badge { padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px; margin-left: 3px; letter-spacing: 0; font-size: 9px; }
 h1 { font-size: clamp(25px, 2.65vw, 40px); font-weight: 550; letter-spacing: -1.5px; margin-top: 20px; line-height: 1.5; }
 .serif-word { font-family: 'Songti SC', 'SimSun', Georgia, serif; font-weight: 500; }
-.page-intro p { font-size: 11px; color: var(--muted); line-height: 1.9; margin-top: 10px; letter-spacing: .2px; }
+.page-intro p { font-size: 13px; color: var(--muted); line-height: 1.9; margin-top: 10px; letter-spacing: .2px; }
 .start-button { padding: 10px 15px; margin-top: 31px; font-size: 11px; }
 .intro-meta { display: flex; gap: 25px; margin-top: 23px; color: var(--muted); font-size: 9px; }
 .intro-meta > span { display: flex; align-items: center; gap: 6px; }
@@ -92,10 +92,10 @@ h1 { font-size: clamp(25px, 2.65vw, 40px); font-weight: 550; letter-spacing: -1.
 .component-card:nth-child(2) { animation-delay: .04s; } .component-card:nth-child(3) { animation-delay: .08s; } .component-card:nth-child(n+4) { animation-delay: .12s; }
 .card-heading { display: flex; align-items: center; justify-content: space-between; padding: 17px 19px 0; }
 .card-heading h3 { font-size: 13px; font-weight: 600; letter-spacing: -.25px; }
-.card-heading span { display: block; color: var(--muted); font-size: 9px; margin-top: 4px; }
+.card-heading span { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
 .code-toggle { align-self: flex-start; margin-top: -1px; }
 .card-preview { min-height: 224px; display: flex; align-items: center; padding: 21px 20px; }
-.component-card footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding: 11px 18px; background: var(--surface); color: var(--muted); font-size: 8px; }
+.component-card footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); padding: 11px 18px; background: var(--surface); color: var(--muted); font-size: 10px; }
 .component-card footer > span { display: flex; align-items: center; gap: 5px; }
 .component-card footer .small-dot { width: 3px; height: 3px; }
 .button-demo { display: flex; flex-direction: column; gap: 15px; }
@@ -124,7 +124,7 @@ h1 { font-size: clamp(25px, 2.65vw, 40px); font-weight: 550; letter-spacing: -1.
 .profile-name { display: flex; align-items: center; gap: 7px; padding-top: 25px; }
 .profile-name h4 { font-size: 16px; font-weight: 600; }
 .profile-name .skyui-badge { font-size: 7px; padding: 2px 5px; }
-.profile-details p { font-size: 8px; color: var(--muted); margin-top: 4px; }
+.profile-details p { font-size: 10px; color: var(--muted); margin-top: 4px; }
 .profile-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 13px; gap: 6px; }
 .profile-bottom > span { font-size: 8px; color: var(--muted); }
 .profile-bottom b { font-weight: 550; color: var(--ink); font-size: 9px; }
@@ -275,7 +275,7 @@ pre { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 10px; line-
 @media (max-width: 1180px) { .sidebar { width: 206px; padding-left: 15px; padding-right: 15px; } .sidebar-user { margin: 0 -15px; padding: 17px 15px; } .main-shell { margin-left: 206px; } main { padding-left: 25px; padding-right: 25px; } .topbar { padding-left: 25px; padding-right: 25px; } .component-grid { gap: 15px; } .card-heading { padding-left: 15px; padding-right: 15px; } .card-preview { padding-left: 15px; padding-right: 15px; } .button-demo > div { gap: 6px; } .button-demo .skyui-button { padding: 8px 9px; font-size: 9px; } .choice-row { gap: 10px; } .profile-component .card-preview { padding-left: 13px; padding-right: 13px; } .meta-last { display: none !important; } }
 @media (max-width: 1000px) { .component-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .list-view { grid-template-columns: 1fr; } .page-intro { align-items: flex-start; } .start-button { margin-top: 3px; } h1 { font-size: 28px; } .view-controls > span { display: none; } .gallery-toolbar { gap: 10px; } .category-tabs { gap: 0; } .category-tabs button { padding: 8px 9px; } .manifesto-art { opacity: .18; right: 0; } .page-intro p { max-width: 400px; } }
 @media (max-width: 740px) { .sidebar { transform: translateX(-100%); transition: transform .2s; width: 226px; } .sidebar.is-open { transform: translateX(0); } .sidebar-overlay { position: fixed; inset: 0; z-index: 25; background: #20202066; border: 0; } .main-shell { margin-left: 0; } .mobile-menu { display: inline-flex; } .topbar { height: 65px; padding: 0 20px; } .breadcrumbs { gap: 8px; } .topbar-actions { gap: 11px; } .search-box { width: 153px; } .search-box input { width: 110px; } .search-box kbd { display: none; } .header-divider { display: none; } main { padding: 29px 20px 0; } .page-intro { flex-wrap: wrap; gap: 19px; } h1 { font-size: 30px; letter-spacing: -1px; margin-top: 15px; } .start-button { margin: 0; } .intro-meta { gap: 17px; font-size: 8px; margin-top: 20px; } .gallery-toolbar { margin-top: 28px; } .component-grid { gap: 15px; } .toast { left: 50%; max-width: calc(100% - 24px); font-size: 11px; } .sidebar-bottom { padding-top: 20px; } .made-for { margin-bottom: 15px; } .swatches { gap: 8px; } .swatches > div > div { height: 65px; } .overview-stats { gap: 45px; padding-left: 10px; } .spacing-examples { gap: 20px; } }
-@media (max-width: 500px) { .topbar-actions .skyui-avatar { display: none; } .search-box { width: 130px; } .search-box input { width: 100px; } .breadcrumbs { font-size: 10px; } h1 { font-size: 27px; } .page-intro p { font-size: 10px; } .component-grid, .list-view { grid-template-columns: 1fr; } .list-view .component-card { display: block; } .card-preview { min-height: 233px; padding: 24px; } .card-heading { padding: 19px 22px 0; } .button-demo .skyui-button { font-size: 11px; padding: 9px 14px; } .button-demo > div { gap: 13px; } .card-heading h3 { font-size: 14px; } .card-heading span { font-size: 10px; } .input-demo .skyui-input { font-size: 11px; height: 37px; } .controls-demo .switch-line { font-size: 12px; } .choice-row { gap: 24px; } .choice-row label { font-size: 10px; } .view-controls { display: none; } .category-tabs { width: 100%; justify-content: space-between; } .category-tabs button { font-size: 10px; padding: 8px 9px; } .profile-component .card-preview { padding: 16px 23px; } .profile-art { height: 83px; } .profile-details p { font-size: 9px; } .profile-bottom > span { font-size: 9px; } .sample-notification b { font-size: 11px; } .sample-notification p { font-size: 9px; } .sample-notification { padding: 13px; } .component-card footer { font-size: 9px; } .tab-content p { font-size: 10px; } .tab-content h4 { font-size: 13px; } .tab-content { padding-top: 28px; } .sample-tabs button { font-size: 11px; } .progress-demo p { font-size: 10px; } .manifesto { padding: 25px; } .manifesto h2 { font-size: 40px; } .overview-stats { gap: 24px; } .overview-stats span { font-size: 9px; } .swatches { grid-template-columns: repeat(3, 1fr); row-gap: 20px; } .spacing-examples { gap: 11px; } .spacing-examples code { font-size: 8px; } .section-title { align-items: flex-start; flex-direction: column; } .section-title h2, .guide-content > h2 { font-size: 20px; } .guide-step { gap: 17px; } .guide-step p { font-size: 11px; } .modal { padding: 32px 24px; } .page-footer { font-size: 8px; } .page-footer > span:last-child { font-size: 10px; } }
+@media (max-width: 500px) { .topbar-actions .skyui-avatar { display: none; } .search-box { width: 130px; } .search-box input { width: 100px; } .breadcrumbs { font-size: 10px; } h1 { font-size: 27px; } .page-intro p { font-size: 12px; } .component-grid, .list-view { grid-template-columns: 1fr; } .list-view .component-card { display: block; } .card-preview { min-height: 233px; padding: 24px; } .card-heading { padding: 19px 22px 0; } .button-demo .skyui-button { font-size: 11px; padding: 9px 14px; } .button-demo > div { gap: 13px; } .card-heading h3 { font-size: 14px; } .card-heading span { font-size: 11px; } .input-demo .skyui-input { font-size: 11px; height: 37px; } .controls-demo .switch-line { font-size: 12px; } .choice-row { gap: 24px; } .choice-row label { font-size: 10px; } .view-controls { display: none; } .category-tabs { width: 100%; justify-content: space-between; } .category-tabs button { font-size: 10px; padding: 8px 9px; } .profile-component .card-preview { padding: 16px 23px; } .profile-art { height: 83px; } .profile-details p { font-size: 10px; } .profile-bottom > span { font-size: 9px; } .sample-notification b { font-size: 11px; } .sample-notification p { font-size: 9px; } .sample-notification { padding: 13px; } .component-card footer { font-size: 10px; } .tab-content p { font-size: 10px; } .tab-content h4 { font-size: 13px; } .tab-content { padding-top: 28px; } .sample-tabs button { font-size: 11px; } .progress-demo p { font-size: 10px; } .manifesto { padding: 25px; } .manifesto h2 { font-size: 40px; } .overview-stats { gap: 24px; } .overview-stats span { font-size: 9px; } .swatches { grid-template-columns: repeat(3, 1fr); row-gap: 20px; } .spacing-examples { gap: 11px; } .spacing-examples code { font-size: 9px; } .section-title { align-items: flex-start; flex-direction: column; } .section-title h2, .guide-content > h2 { font-size: 20px; } .guide-step { gap: 17px; } .guide-step p { font-size: 11px; } .modal { padding: 32px 24px; } .page-footer { font-size: 8px; } .page-footer > span:last-child { font-size: 10px; } }
 .gallery-toolbar { flex-wrap: wrap; }
 .category-tabs { min-width: 0; max-width: 100%; flex-wrap: wrap; justify-content: flex-start; gap: 4px; }
 .category-tabs button { white-space: nowrap; }
