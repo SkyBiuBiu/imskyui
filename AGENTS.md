@@ -38,6 +38,16 @@ npx degit SkyBiuBiu/imskyui/src/components src/components
 
 对话框使用原生 `dialog.showModal()`，提供焦点限制、Escape 关闭与关闭后焦点还原。使用 CSS 绘制视觉资产，无需图像服务。尊重 `prefers-reduced-motion`。
 
+## 版本迭代与发版
+
+**任何实质性改动（组件、样式、构建、流程、文档内容）都必须完成一次版本迭代**，不允许改动无版本地留在 main 上。一批相关改动合并为一次迭代，不逐 commit 发版。
+
+1. **升版本**：`package.json` 与 `src/version.ts` 的 `VERSION` 同步修改（`pnpm check:version` 强制二者一致）。粒度遵循 SemVer：新增组件或功能 → minor；修复、样式微调、基础设施与文档 → patch；破坏性变更 → major。
+2. **写 CHANGELOG**：`CHANGELOG.md` 顶部新增 `## [x.y.z] - YYYY-MM-DD` 段落，格式遵循 Keep a Changelog（`### Added 新增` / `### Changed 变更` / `### Fixed 修复` / `### Infrastructure 工程`），一段主线综述开头。CHANGELOG 是 Release 正文的唯一事实来源，漏写会被发版脚本拦截。
+3. **发版**：先 `pnpm release --dry-run` 预演，确认后 `pnpm release`。脚本内部完成 `release:check`（版本一致性 + 类型 + 测试 + 构建）→ annotated tag 并推送 → GitHub Release（正文自动抽取 CHANGELOG 当前版本段落）。前置条件：main 分支、工作区干净、gh 已登录。撤销方式见脚本收尾输出。
+4. **禁止硬编码版本号与组件计数**：源码统一引用 `src/version.ts` 的 `VERSION` / `COMPONENT_COUNT`；README 组件计数与 `COMPONENT_COUNT` 的一致性同样由 `check:version` 强制。
+5. 发版与部署解耦：push main 已自动触发 Pages / Workers 部署，tag 与 Release 只做版本归档，不触发额外部署动作。
+
 不要手动编辑生成的 `routeTree.gen.ts`。不要在自动代理任务中启动开发服务或运行构建、类型检查、测试；部署流水线负责验证。
 
 ## GitHub Pages 演示站
