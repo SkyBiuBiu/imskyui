@@ -15,6 +15,8 @@
 - `src/styles.css`：展示站布局、响应式断点、几何装饰和动画。
 - `src/router.tsx`：TanStack Router 配置。
 - `vite.config.ts`：Vite 与框架构建配置。
+- `.github/workflows/pages.yml`：GitHub Pages 演示站部署工作流（push main 触发），详见文末「GitHub Pages 演示站」。
+- `public/404.html`：Pages 404 回退页，独立静态页，禁止用 index.html 副本替代。
 
 ## 约定
 
@@ -37,3 +39,40 @@ npx degit SkyBiuBiu/imskyui/src/components src/components
 对话框使用原生 `dialog.showModal()`，提供焦点限制、Escape 关闭与关闭后焦点还原。使用 CSS 绘制视觉资产，无需图像服务。尊重 `prefers-reduced-motion`。
 
 不要手动编辑生成的 `routeTree.gen.ts`。不要在自动代理任务中启动开发服务或运行构建、类型检查、测试；部署流水线负责验证。
+
+## GitHub Pages 演示站
+
+在线地址：<https://skybiubiu.github.io/imskyui/>（GitHub 仓库 About 的 homepage 指向此处）。Pages 只托管静态文件，这条链路与 Vercel / Cloudflare / Netlify 的 SSR 部署相互独立，改动其一不影响其余。
+
+### 部署链路
+
+1. **构建**：`pnpm build:pages`，内部为 `DEPLOY_TARGET=github-pages vite build`。`vite.config.ts` 在该 `DEPLOY_TARGET` 下注入 `base: '/imskyui/'` 并开启 TanStack Start 预渲染；应用是单路由，预渲染后唯一路由固化为静态 HTML，产物全部落在 `dist/client`（SSR 产物 `dist/server` 不上传）。其他 `DEPLOY_TARGET` 的构建行为不变。
+2. **部署**：`.github/workflows/pages.yml`，push 到 main 触发。步骤为 checkout → pnpm/action-setup（version 9，仓库未声明 `packageManager` 字段，必须显式指定）→ setup-node（node 22，cache: pnpm）→ `pnpm install --frozen-lockfile` → `pnpm build:pages` → 写 `.nojekyll` → configure-pages → upload-pages-artifact → deploy-pages。无需任何 secret，权限来自 job 级 `permissions`；`concurrency.group: pages` 保证同一时间只有一个部署。
+3. **启用**：仓库 Pages 只需开启一次（`build_type=workflow`）。若未启用：`gh api -X POST repos/SkyBiuBiu/imskyui/pages -f build_type=workflow`。
+
+### 硬性规则
+
+- `public/404.html` 是独立静态页（内联样式、无脚本），未匹配路径由 GitHub Pages 直接返回。**不要**改回 `cp dist/client/index.html dist/client/404.html`：客户端路由器会按当前路径渲染站内 404，与服务端画廊 HTML 不一致，触发 React #418 整树重建和内容闪烁。
+- base 是 `/imskyui/`：源码里的站内链接和 favicon 必须用相对路径（`src/routes/index.tsx` 的品牌链接、`src/routes/__root.tsx` 的 favicon），不要写死 `/`。
+- 预渲染 HTML 必须是有效 HTML：嵌套 `<button>` 等无效结构会直接导致水合失败。典型场景是 Popover 的 trigger 传入 `<Button>` 这类渲染出 button 的组件——Popover 克隆注入交互属性而不是再包一层 button（见 `src/components/ui.tsx` 与对应单测）。新增或修改组件后按下面的方法自查。
+- 改动 `vite.config.ts`、`.github/workflows/pages.yml`、`public/404.html` 属于「不在自动代理任务中运行构建」约定的例外：推送前必须本地验证。
+
+### 推送前本地验证
+
+```bash
+pnpm build:pages
+```
+
+然后模拟 `/imskyui/` 子路径伺服 `dist/client`，做浏览器级检查：
+
+1. 把 `dist/client` 复制进临时目录的 `imskyui/` 子目录，静态服务器根目录设为该临时目录，访问 `http://127.0.0.1:<port>/imskyui/`。直接伺服 `dist/client` 根路径不等价——base 不匹配。
+2. 检查项：资源全部 200；无 console pageerror；水合无 React #418；主题切换、搜索筛选、导航、`⌘K` 命令面板、HTTP 预览弹窗可用；卡片数量与源码卡片集合一致。
+3. 静态检查：预渲染 HTML 中无 button 套 button（用栈匹配数嵌套 `<button>` 开标签）。
+
+### 推送后
+
+`gh run list --repo SkyBiuBiu/imskyui` 确认 pages 工作流 success，再 `curl -s -o /dev/null -w "%{http_code}" https://skybiubiu.github.io/imskyui/` 验证线上返回 200 且含预渲染内容。
+
+### 文档同步约定
+
+演示站信息变更时同步维护：两份 README（`README.md` / `README.en.md`）顶部徽章区与导航行的在线演示入口、命令表中的 `build:pages`；GitHub 仓库 About 的 homepage 指向 Pages 地址，描述中的组件计数与 README 统计行保持一致（当前 66 个组件与场景 / 66 个组件与工具 / 18 种 HTTP 状态页面）。
