@@ -44,12 +44,9 @@ jobs:
       - name: 构建 Pages 静态产物
         run: pnpm build:pages
 
-      # 复制一份 404.html：未匹配路径由 GitHub Pages 返回 404.html，
-      # 加载同一份应用后由前端渲染站内 404 界面
-      - name: 生成 404 回退页
-        run: cp dist/client/index.html dist/client/404.html
-
-      # 禁用 Jekyll 处理，避免下划线开头的资源被跳过
+      # 未匹配路径由 GitHub Pages 返回 public/404.html（随构建产物输出到 dist/client）：
+      # 独立静态页，不加载应用，避免用 index.html 副本导致的整树水合失败
+      # .nojekyll 同时禁用 Jekyll 处理，防止下划线开头的资源被跳过
       - name: 写入 .nojekyll
         run: touch dist/client/.nojekyll
 

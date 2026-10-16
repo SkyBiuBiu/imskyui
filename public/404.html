@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charSet="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>404 — 这一页，留白了 · skyui</title>
+<link rel="icon" type="image/svg+xml" href="skyui.svg"/>
+<style>
+  :root { --ink: #202020; --muted: #858585; --line: #e8e8e8; --paper: #ffffff; --canvas: #f7f7f7; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { min-height: 100vh; display: grid; place-items: center; background: var(--canvas); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; padding: 24px; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 48px 56px; text-align: center; max-width: 520px; width: 100%; }
+  .brand { display: block; font-size: 12px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; margin-bottom: 24px; }
+  .code { font-size: 64px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
+  h1 { font-size: 20px; font-weight: 600; margin: 16px 0 8px; }
+  p { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 28px; }
+  a.button { display: inline-block; background: var(--ink); color: var(--paper); font-size: 13px; padding: 10px 20px; border-radius: 8px; text-decoration: none; }
+  a.button:hover { opacity: .85; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #f0f0f0; --muted: #999999; --line: #333333; --paper: #1a1a1a; --canvas: #111111; }
+  }
+</style>
+</head>
+<body>
+  <main class="card">
+    <span class="brand">skyui / HTTP 4xx</span>
+    <div class="code">404</div>
+    <h1>这一页，留白了</h1>
+    <p>这个地址没有对应的页面。回到 skyui，继续寻找你的下一个组件。</p>
+    <a class="button" href="/imskyui/">返回组件库 →</a>
+  </main>
+</body>
+</html>
