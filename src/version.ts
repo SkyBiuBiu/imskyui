@@ -4,7 +4,7 @@
  * 以 package.json 为唯一事实来源，此处仅在构建期注入常量；
  * 发版时只需改 package.json 一处，pnpm check:version 会校验二者是否同步。
  */
-export const VERSION = '1.4.0'
+export const VERSION = '1.4.1'
 
 /** 展示用短版本号（徽章、标签页文案用） */
 export const VERSION_SHORT = `v${VERSION.split('.')[0]}.${VERSION.split('.')[1]}`

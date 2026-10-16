@@ -3,6 +3,26 @@
 本项目的所有重要变更都记录在此文件中。
 格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [1.4.1] - 2026-10-16
+
+本次迭代的主线：**上线 GitHub Pages 演示站，并修复一处影响所有 SSR 部署的水合缺陷**。组件库 API 无变化，属基础设施与修复版本。
+
+### Added 新增
+
+- GitHub Pages 演示站：`pnpm build:pages`（`DEPLOY_TARGET=github-pages` 注入 `/imskyui/` base 并预渲染唯一路由），配套 `.github/workflows/pages.yml` 在 push main 时自动部署，线上地址 <https://skybiubiu.github.io/imskyui/>。
+- `public/404.html`：独立静态 404 回退页（内联样式、无脚本），随构建输出，未匹配路径由 Pages 直接返回。
+- AGENTS.md 固化 GitHub Pages 部署流程与版本迭代发版规则，供后续 AI 代理执行。
+
+### Fixed 修复
+
+- `Popover` 的 trigger 传入 `<Button>` 等渲染出 button 的组件时，会被再包一层 `<button>` 形成 button 嵌套 button 的无效 HTML，SSR 页面直接水合失败（React #418）。改为识别可交互 trigger（内在 button/a、自定义组件）后克隆注入 `aria-haspopup` / `aria-expanded` / `onClick`；Fragment 与普通内在元素仍包 `<button>` 保持键盘可达。补充两条单测覆盖两种路径。该缺陷同样影响 Vercel / Cloudflare 等既有 SSR 部署。
+- 404 回退改用独立静态页：此前 `404.html` 为 index.html 副本，客户端路由器按当前路径渲染站内 404 时与服务端画廊 HTML 不一致，触发整树重建与内容闪烁。
+
+### Changed 变更
+
+- 展示站正文层字号下限对齐 13px：页面导读 11→13、卡片副标题 9→11、卡片页脚与个人名片 8→10，辅助层（侧栏简介、版本徽标、导航计数）+1px，≤500px 断点同步；装饰层微标签（eyebrow、kbd 等）保持原样。`ui.css` 为自包含交付物，不在本次范围。
+- GitHub 仓库 About 区 homepage 指向 Pages 地址，描述计数与 README 统计行同步。
+
 ## [1.4.0] - 2026-10-13
 
 本次迭代的主线：**补齐数据展示能力，并把发版流程从纯手工收敛为脚本驱动**。此前 66 个导出已覆盖通用 UI 与浮层表单，但图表与指标类几乎为零 —— 展示站「数据概览」里的图形是写死的 CSS 柱状 div，使用者要做看板必须自行从零实现折线图、趋势线与水位可视化。本版本新增 8 个零依赖组件，并建立版本号单一来源与一键发版机制。
